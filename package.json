@@ -1,0 +1,19 @@
+{
+  "name": "lh-atlas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "export PORT=5005 && nodemon index.js"
+  },
+  "author": "Palash Bauri",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.2",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "leaflet": "^1.3.4",
+    "mysql": "^2.16.0"
+  }
+}

@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>LibreHealth Atlas</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="static/lh-logo-o.jpg">
+    <meta name="description" content="Atlas for librehealth to show users , events and support">
+    <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <link type="text/css" href="static/style.css" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!--Top navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light nav-down">
+        <div class="container pr-0">
+            <a class="navbar-brand" href="/">
+                <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528"
+                    alt="logo"> <b style="color:white;">Atlas</b>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-togg">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item navicon">
+                        <a style="color: white;" href="#" class="nav-link" onclick="toggle_legend()"><i class="fa fa-info"></i>
+                            Legend</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a style="color: white;" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <span class="fa fa-user"></span> More </a>
+                        <ul class="dropdown-menu">
+                            <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
+                            <% if (user){ %>
+                            <li id="admin-btn" class="text-center"><a href="/admin">Admin</a></li>
+                            <% } %>
+
+                            <% if (user){ %>
+                            <li id="signout" style="" class="text-center"><a href="/signout">Sign
+                                    Out</a></li>
+                            <% } %>
+                            <div class="dropdown-divider"></div>
+                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">Credits</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Credits</h4>
+                </div>
+                <div class="modal-body">
+                    <div>Made by, Palash Bauri</div>
+                    <br>
+                    <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                        from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by
+                        <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC
+                            3.0 BY</a></div>
+                    <div>
+                        All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="legend" class="legend">
+        <div class="container">
+            <h5>Legend</h5>
+            <p><img src="static/ehr.png">&nbsp;EHR</p>
+            <p><img src="static/toolkit.png">&nbsp;Toolkit</p>
+            <p><img src="static/radiology.png">&nbsp;Radiology</p>
+        </div>
+
+    </div>
+    <div id="map"></div>
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+    <script src="static/main.js"></script>
+    <% if (user){ %>
+    <script>
+        document.getElementById("login-btn").style.display = "none";
+    </script>
+    <% } %>
+</body>
+
+</html>

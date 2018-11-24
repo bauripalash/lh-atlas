@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.navbar {
+    background: #f59031;
+    color: white;
+
+}
+
+.logo-navbar {
+    width: auto !important;
+    height: 2rem !important;
+}
+
+.nav-link {
+    color: white;
+}
+
+#helpmodal,
+#myModal {
+    display: none;
+}
+
+a.disabled {
+    /* Make the disabled links grayish*/
+    color: gray;
+    /* And disable the pointer events */
+    pointer-events: none;
+}
+
+
+#map {
+    height: 90vh;
+    width: 100vw;
+}
+
+.card {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.legend {
+
+    position: absolute;
+    z-index: 999999999999999999999;
+    right: 10%;
+    top: 25%;
+    max-width: 140px;
+    background: #ffffff;
+    opacity: 0.7;
+}
+
+/* .ibox {
+    width: 250px;
+    height: 200px;
+    margin: 0;
+    padding: 20px;
+    color: black;
+}
+
+.ibox .ibox-text {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+}
+
+.ibox .ibox-text .event,
+.ibox .ibox-text .ehr,
+.ibox .ibox-text .toolkit,
+.ibox .ibox-text .radiology,
+.ibox .ibox-text .support {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+}
+
+.ibox .ibox-text .event {
+    color: red;
+}
+
+.ibox .ibox-text .ehr {
+    color: green;
+}
+
+.ibox .ibox-text .toolkit {
+    color: orange;
+}
+
+.ibox .ibox-text .radiology {
+    color: steelblue;
+}
+
+.ibox .ibox-text .support {
+    color: purple;
+}
+
+.ibox .ibox-text .name {
+    font-size: 18px;
+    color: black;
+}
+ */
+
+.m-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+	font-size: 25px;
+	margin: 0;
+	padding: 0;
+}
+
+.m-tool {
+    font-size: 15px;
+    color: #666;
+	margin: -20px 0 0 0;
+	padding: 0;
+}
+
+.m-intro {
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+}
+
+.m-location {
+
+    margin: -10px 0 0 0;
+}
+
+.m-email,
+.m-email a {
+    color: #f59031;
+}

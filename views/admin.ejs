@@ -1,0 +1,264 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>LibreHealth Atlas Admin Panel</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="static/lh-logo-o.jpg">
+    <meta name="description" content="Atlas for librehealth to show users , events and support">
+    <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+    <link type="text/css" href="static/style.css" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!--Top navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light nav-down">
+        <div class="container pr-0">
+            <a class="navbar-brand" href="/">
+                <!-- <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528" alt="logo">  -->
+                    <b style="color:white;">LH Atlas Admin</b>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-togg">
+                <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item dropdown">
+                        <a style="color: white;" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <span class="fa fa-user"></span> More </a>
+                        <ul class="dropdown-menu">
+                            <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
+                            <li id="newmarker" style="display: none;" class="text-center"><a href="#" data-toggle="modal"
+                                    data-target="#newmarkermodal">New
+                                    Marker</a></li>
+                            <li id="getjson" style="display: none;" class="text-center"><a href="https://lh-atlas.firebaseio.com/.json?print=pretty&format=export&download=lh-atlas-export.json">Export
+                                    JSON</a></li>
+                            <div class="dropdown-divider"></div>
+                            <li id="signout" style="display: none;" class="text-center"><a href="/signout">Sign
+                                    Out</a></li>
+                            <div class="dropdown-divider"></div>
+                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">Credits</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Credits</h4>
+                </div>
+                <div class="modal-body">
+                    <div>Made by, Palash Bauri</div>
+                    <br>
+                    <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                        from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by
+                        <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC
+                            3.0 BY</a></div>
+                    <div>
+                        All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="newmarkermodal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">New Marker</h4>
+            </div>
+            <div class="modal-body">
+              <!-- <input type="text" placeholder="Type" id="m_type"><br> -->
+              <select name="m_tool" id="m_type">
+                <option value="ehr">LibreHealth EHR</option>
+                <option value="toolkit">LibreHealth Toolkit</option>
+                <option value="radiology">LibreHealth Radiology</option>
+              </select>
+              <br><br>
+              <input type="text" placeholder="Version" name="m_version" id="m_version"><br><br>
+              <input type="text" placeholder="Name" name="m_name" id="m_name"><br><br>
+              <input type="text" placeholder="Location" id="m_location" name="m_location"><br><br>
+              <input type="email" placeholder="Email" id="m_contactEmail" name="m_contactEmail"><br><br>
+              <input type="tel" placeholder="Phone" id="m_contactPhone" name="m_contactPhone"><br><br>
+              <input type="text" placeholder="Latitude" id="m_lat" name="m_lat"><br><br>
+              <input type="text" placeholder="Longitude" id="m_lng" name="m_lng"><br><br>
+              <input type="text" placeholder="Introduction" id="m_intro" name="m_intro"><br><br>
+    
+              <button id="submit" class="btn btn-primary" onclick="marker_submit()" data-dismiss="modal">Add Marker</button>
+    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="help-me" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Quick Help</h4>
+                </div>
+                <div class="modal-body">
+                    This is the admin dashboard of LibreHealth Atlas. Here You Create New Markers , download JSON data and see custom metrics
+                    <br><br>
+                    <div>
+                        To Create a New Marker , Click on the <b>Create New Marker</b> button and fill the form
+                    </div><br>
+                    <div>
+                        To Export JSON data click on the <b>Export JSON</b> and select from "All" , "Only EHR" , "Only Toolkit" , "Only Radiology"
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="export-json" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Export JSON</h4>
+                </div>
+                <div class="modal-body">
+                    <a class="btn btn-success" href="/api/markers/">All Products</a>
+                    <br><br>
+                    <div>
+                        <a class="btn btn-success" href="/api/markers/ehr/">Only LH EHR</a>
+                    </div><br>
+                    <div>
+                        <a class="btn btn-success" href="/api/markers/toolkit/">Only LH Toolkit</a>
+                    </div>
+                    <br><div>
+                        <a class="btn btn-success" href="/api/markers/radiology/">Only LH Radiology</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="del-m" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Marker</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-group" action="/del" method="POST">
+                            <label for="mid">ID of Marker : </label>
+                            <input class="form-control" type="text" name="mid" id="mid">
+                            <br>
+                            <input class="btn btn-danger" type="submit" value="Delete">
+
+                        </form>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+      <div id="login-area" class="container pt-3">
+        <div class="row justify-content-sm-center">
+          <div class="col-sm-6 col-md-4">
+      
+            <div class="card border-info text-center">
+              <div class="card-header">
+                Login to Access Admin Dashboard
+              </div>
+              <div class="card-body">
+                <img src="/static/user.png">
+                <h4 class="text-center">LibreHealth Atlas Admin</h4>
+                <form action="/login" method="POST"  class="form-signin">
+                  <input type="text" class="form-control mb-2" placeholder="Email" name="email" required autofocus>
+                  <input type="password" class="form-control mb-2" placeholder="Password" name="password" required>
+                  <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Sign in</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="button-area" style="display: none;" class="container pt-3">
+        <div class="row justify-content-sm-center">
+          <div class="col-sm-6">
+            <canvas id="toolchart"  width="100" height="40"></canvas> 
+            <br>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button id="Create-new"  class="btn btn-primary" data-toggle="modal" data-target="#newmarkermodal">Create New Marker</button>
+    
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="second group">
+                    <button id="export-json" class="btn btn-primary" data-toggle="modal" data-target="#export-json">Export JSON</button>
+    
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="second group">
+                        <button id="del-m-btn" class="btn btn-primary" data-toggle="modal" data-target="#del-m">Delete Marker</button>
+        
+                    </div>
+                <div class="btn-group" role="group" aria-label="Third group">
+                    <button id="help-show"  class="btn btn-primary" data-toggle="modal" data-target="#help-me">Help</button>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+    
+    
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="static/admin.js"></script>
+    <% if (user){ %>
+        <script>
+        document.getElementById("login-area").style.display = "none";
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("signout").style.display = "block";
+        document.getElementById("getjson").style.display = "block"; 
+        document.getElementById("newmarker").style.display = "block";
+        document.getElementById("button-area").style.display = "block";
+        
+        
+        </script> 
+
+    <% } %>
+</body>
+
+</html>
