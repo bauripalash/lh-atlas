@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "export PORT=5005 && nodemon index.js"
+    "start": "node index.js"
   },
   "author": "Palash Bauri",
   "license": "MIT",
