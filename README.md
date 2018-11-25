@@ -24,9 +24,7 @@
             email VARCHAR(50),
             c_date TIMESTAMP
         );
-        ```
-
-	 ```sql
+	
         CREATE TABLE admins(
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             EMAIL VARCHAR(255) NOT NULL,
