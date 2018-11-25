@@ -87,23 +87,24 @@
             </div>
             <div class="modal-body">
               <!-- <input type="text" placeholder="Type" id="m_type"><br> -->
-              <select name="m_tool" id="m_type">
+              <form action="/addmarker" method="POST">
+              <select required name="m_tool" id="m_type">
                 <option value="ehr">LibreHealth EHR</option>
                 <option value="toolkit">LibreHealth Toolkit</option>
                 <option value="radiology">LibreHealth Radiology</option>
               </select>
               <br><br>
-              <input type="text" placeholder="Version" name="m_version" id="m_version"><br><br>
-              <input type="text" placeholder="Name" name="m_name" id="m_name"><br><br>
-              <input type="text" placeholder="Location" id="m_location" name="m_location"><br><br>
-              <input type="email" placeholder="Email" id="m_contactEmail" name="m_contactEmail"><br><br>
+              <input type="text" placeholder="Version" name="m_version" required id="m_version"><br><br>
+              <input type="text" placeholder="Name" required name="m_name" id="m_name"><br><br>
+              <input type="text" placeholder="Location" required id="m_location" name="m_location"><br><br>
+              <input type="email" placeholder="Email"  id="m_contactEmail" name="m_contactEmail"><br><br>
               <input type="tel" placeholder="Phone" id="m_contactPhone" name="m_contactPhone"><br><br>
-              <input type="text" placeholder="Latitude" id="m_lat" name="m_lat"><br><br>
-              <input type="text" placeholder="Longitude" id="m_lng" name="m_lng"><br><br>
-              <input type="text" placeholder="Introduction" id="m_intro" name="m_intro"><br><br>
+              <input type="text" placeholder="Latitude" required id="m_lat" name="m_lat"><br><br>
+              <input type="text" placeholder="Longitude" required id="m_lng" name="m_lng"><br><br>
+              <input type="text" placeholder="Introduction" required id="m_intro" name="m_intro"><br><br>
     
-              <button id="submit" class="btn btn-primary" onclick="marker_submit()" data-dismiss="modal">Add Marker</button>
-    
+              <input id="submit" class="btn btn-primary" type="submit" value="Add Marker">
+            </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -192,6 +193,9 @@
               <div class="card-body">
                 <img src="/static/user.png">
                 <h4 class="text-center">LibreHealth Atlas Admin</h4>
+                <% if (errormsg){ %>
+                    <p style="color: red;" class="text-center"><%= errormsg %> </p>
+                    <% } %>
                 <form action="/login" method="POST"  class="form-signin">
                   <input type="text" class="form-control mb-2" placeholder="Email" name="email" required autofocus>
                   <input type="password" class="form-control mb-2" placeholder="Password" name="password" required>

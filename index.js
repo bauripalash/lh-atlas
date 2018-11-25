@@ -25,18 +25,6 @@ app.use(session({
     }
 }));
 
-// create table markers (
-//     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//     name VARCHAR(255) NOT NULL,
-//     tool VARCHAR(30) NOT NULL,
-//     version VARCHAR(30) NOT NULL,
-//     location VARCHAR(255) NOT NULL,
-//     coords VARCHAR(255) NOT NULL,
-//     phone VARCHAR(255),
-//     email VARCHAR(50),
-//     c_date TIMESTAMP
-//     );
-
 
 // CREATE TABLE admins(
 //     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -51,10 +39,6 @@ var connection = mysql.createConnection({
     password: 'librepassword',
     database: 'lhatlas'
 });
-
-// var sess = req.session;  //initialize session variable
-// req.session.userId = results[0].id; //set user id
-// req.session.user = results[0];//set user name
 
 connection.connect(function (err) {
     if (err) {
@@ -75,7 +59,9 @@ app.get('/', function (request, response) {
     // console.log("session userid : " + sess.userid);
     user = sess.userid;
 
-    response.render("index"  , {user : user});
+    response.render("index", {
+        user: user
+    });
 });
 app.get('/signout', function (request, response) {
 
@@ -89,54 +75,58 @@ app.get('/admin', function (request, response) {
     var sess = request.session;
     console.log("session userid : " + sess.userid);
     user = sess.userid;
-    // var ehr_total = 0;
-    // var toolkit_total = 0;
-    // var rad_total = 0;
-    // connection.query("SELECT * FROM `newmarkers` WHERE tool = 'ehr'", function (error, results, fields) {
-    //     if (error) {
-    //         console.log(error);
-    //         return;
-    //     }
-    //     for (var i in results){
-    //         ehr_total++;
-    //     }
-    // });
-    // console.log(ehr_total);
+
     response.render("admin", {
-        user: user
+        user: user,
+        errormsg: ""
     });
+});
+
+app.get('/login', function (request, response) {
+    request.redirect("/admin");
 });
 
 app.post('/login', function (request, response) {
     data = request.body;
-    bcrypt.hash(data.password, saltRounds, function (err, hash) {
-        // connection.query('INSERT INTO `admins` (EMAIL , PASSWORD) VALUES (' + data.email + ', ' + hash + ')');
-        connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            // console.log(results[0].PASSWORD);
-            bcrypt.compare(data.password, results[0].PASSWORD, function (err, res) {
-                if (res) {
-                    var sess = request.session;
-                    sess.userid = data.email;
-                    console.log("logged in : " + data.email);
-                    request.session.save(function (err) {
-                        console.log("session saved");
-                        response.redirect("/admin");
-                    })
-                } else {
-                    console("pass dont match");
-                    response.redirect("/admin");
-                }
+
+    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
+        if (JSON.stringify(results) == "[]") {
+            response.render('admin', {
+                user: request.session.user,
+                errormsg: "Wrong Email Address"
             });
-        });
+        } else {
+            bcrypt.hash(data.password, saltRounds, function (err, hash) {
+                // connection.query('INSERT INTO `admins` (EMAIL , PASSWORD) VALUES (' + data.email + ', ' + hash + ')');
+                connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    // console.log(results[0].PASSWORD);
+                    bcrypt.compare(data.password, results[0].PASSWORD, function (err, res) {
+                        if (res) {
+                            var sess = request.session;
+                            sess.userid = data.email;
+                            console.log("logged in : " + data.email);
+                            request.session.save(function (err) {
+                                console.log("session saved");
+                                response.redirect("/admin");
+                            })
+                        } else {
+                            // console("pass dont match");
+                            response.render('admin', {
+                                user: request.session.user,
+                                errormsg: "Wrong Password For this email address"
+                            });
+                        }
+                    });
+                });
+            });
+        }
     });
-    // bcrypt.hash(data.password, saltRounds, function(err, hash) {
-    //     console.log("{ username : " + data.email + " , passwordHash : "+hash + "}");
-    // });
-    
+
+
 });
 // create table newmarkers (
 //     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -153,16 +143,16 @@ app.post('/login', function (request, response) {
 // );
 app.post("/addmarker", function (request, response) {
     data = request.body;
-    name = data.name;
-    tool = data.tool;
-    version = data.version;
-    location = data.location;
-    lat = data.lat;
-    lng = data.lng;
-    intro = data.intro;
-    email = data.contactEmail;
-    phone = data.contactPhone;
-    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , email) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "'  + lng + '", "'+ intro + '", "' + phone + '", "' + email + '")', function (error, results, fields) {
+    name = data.m_name;
+    tool = data.m_tool;
+    version = data.m_version;
+    location = data.m_location;
+    lat = data.m_lat;
+    lng = data.m_lng;
+    intro = data.m_intro;
+    email = data.m_contactEmail;
+    phone = data.m_contactPhone;
+    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , email) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + email + '")', function (error, results, fields) {
         if (error) {
             console.log(error);
             return;
@@ -170,7 +160,11 @@ app.post("/addmarker", function (request, response) {
             console.log("SUCCESSFULLY SAVED DATA");
         }
     });
-    response.redirect("/");
+    response.redirect("/admin");
+});
+
+app.get("/del" , function(request , response){
+    response.redirect("/admin");
 });
 
 app.post("/del", function (request, response) {
@@ -185,8 +179,8 @@ app.post("/del", function (request, response) {
             response.redirect("/admin");
         }
     });
-    
-    
+
+
 });
 
 app.get('/api/markers/', function (req, res) {

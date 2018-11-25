@@ -1,31 +1,31 @@
-function marker_submit() {
+// function marker_submit() {
 
-    var name = document.getElementById("m_name").value;
-    var type = document.getElementById("m_type").value;
-    var location = document.getElementById("m_location").value;
-    var intro = document.getElementById("m_intro").value;
-    var lat = document.getElementById("m_lat").value;
-    var lng = document.getElementById("m_lng").value;
-    var contactEmail = document.getElementById("m_contactEmail").value;
-    var contactPhone = document.getElementById("m_contactPhone").value;
-    var version = document.getElementById("m_version").value;
+//     var name = document.getElementById("m_name").value;
+//     var type = document.getElementById("m_type").value;
+//     var location = document.getElementById("m_location").value;
+//     var intro = document.getElementById("m_intro").value;
+//     var lat = document.getElementById("m_lat").value;
+//     var lng = document.getElementById("m_lng").value;
+//     var contactEmail = document.getElementById("m_contactEmail").value;
+//     var contactPhone = document.getElementById("m_contactPhone").value;
+//     var version = document.getElementById("m_version").value;
 
 
 
-    $.post("/addmarker", {
-            name: name,
-            tool: type,
-            location: location,
-            lat: lat,
-            lng: lng,
-            intro: intro,
-            contactEmail: contactEmail,
-            contactPhone: contactPhone,
-            version: version
-        },
-        function (data, status) {
-        });
-}
+//     $.post("/addmarker", {
+//             name: name,
+//             tool: type,
+//             location: location,
+//             lat: lat,
+//             lng: lng,
+//             intro: intro,
+//             contactEmail: contactEmail,
+//             contactPhone: contactPhone,
+//             version: version
+//         },
+//         function (data, status) {
+//         });
+// }
 
 function logmein() {
     document.getElementById("login-form").submit();
