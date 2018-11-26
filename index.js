@@ -150,10 +150,10 @@ app.post("/addmarker", function (request, response) {
     lat = data.m_lat;
     lng = data.m_lng;
     intro = data.m_intro;
+    pnum = data.m_pnum;
     email = data.m_contactEmail;
     phone = data.m_contactPhone;
-    created_by = request.session.user;
-    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + email + '", "' + created_by + '")', function (error, results, fields) {
+    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email + '")', function (error, results, fields) {
         if (error) {
             console.log(error);
             return;

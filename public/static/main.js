@@ -24,6 +24,7 @@ $.getJSON("/api/markers", function (data) {
                 '<p class="m-tool"><b>LH EHR (v' + marker.version + ') </b></p>' +
                 '<p class="m-intro">' + marker.intro + '</p>' +
                 '<p class="m-location"><b>Location : ' + marker.location + '</b></p>' +
+                   '<p class="m-location"><b>Patients  : ' + marker.pnum + '</b></p>' +
                 // '<script>if (marker.contactPhone){document.getElementById("contactphone").style.display = "block"}</script>' +
                 '<p class="m-phone"><b>Call : ' + marker.phone + '</b></p>' +
                 '<p class="m-email"><b>Contact at: <a href=mailto:' + marker.email + '>' + marker.email + '</a></b></p>' +
@@ -46,6 +47,7 @@ $.getJSON("/api/markers", function (data) {
                 '<p class="m-tool"><b>LH Toolkit (v' + marker.version + ') </b></p>' +
                 '<p class="m-intro">' + marker.intro + '</p>' +
                 '<p class="m-location"><b>Location : ' + marker.location + '</b></p>' +
+                '<p class="m-location"><b>Patients  : ' + marker.pnum + '</b></p>' +
                 // '<script>if (marker.contactPhone){document.getElementById("contactphone").style.display = "block"}</script>' +
                 '<p class="m-phone"><b>Call : ' + marker.phone + '</b></p>' +
                 '<p class="m-email"><b>Contact at: <a href=mailto:' + marker.email + '>' + marker.email + '</a></b></p>' +
@@ -68,6 +70,7 @@ $.getJSON("/api/markers", function (data) {
                 '<p class="m-tool"><b>LH Radiology (v' + marker.version + ') </b></p>' +
                 '<p class="m-intro">' + marker.intro + '</p>' +
                 '<p class="m-location"><b>Location : ' + marker.location + '</b></p>' +
+                '<p class="m-location"><b>Patients  : ' + marker.pnum + '</b></p>' +
                 // '<script>if (marker.contactPhone){document.getElementById("contactphone").style.display = "block"}</script>' +
                 '<p class="m-phone"><b>Call : ' + marker.phone + '</b></p>' +
                 '<p class="m-email"><b>Contact at: <a href=mailto:' + marker.email + '>' + marker.email + '</a></b></p>' +
