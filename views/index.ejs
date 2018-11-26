@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
         crossorigin="" />
-    <link type="text/css" href="static/style.css" rel="stylesheet">
+    <link type="text/css" href="/static/style.css" rel="stylesheet">
 </head>
 
 
@@ -41,6 +41,7 @@
                             <span class="fa fa-user"></span> More </a>
                         <ul class="dropdown-menu">
                             <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
+                            <li id="login-btn" class="text-center"><a href="/admin/register">Register</a></li>
                             <% if (user){ %>
                             <li id="admin-btn" class="text-center"><a href="/admin">Admin</a></li>
                             <% } %>

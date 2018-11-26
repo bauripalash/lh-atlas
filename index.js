@@ -152,7 +152,8 @@ app.post("/addmarker", function (request, response) {
     intro = data.m_intro;
     email = data.m_contactEmail;
     phone = data.m_contactPhone;
-    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , email) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + email + '")', function (error, results, fields) {
+    created_by = request.session.user;
+    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + email + '", "' + created_by + '")', function (error, results, fields) {
         if (error) {
             console.log(error);
             return;
@@ -161,6 +162,63 @@ app.post("/addmarker", function (request, response) {
         }
     });
     response.redirect("/admin");
+});
+
+app.get("/admin/register", function (request, response) {
+
+    response.render("reg" , {
+        user : request.session.user,
+        errormsg : ""
+    });
+
+});
+
+
+app.post("/register", function (request, response) {
+    data = request.body;
+    email = data.n_email;
+    rawpass = data.n_pass;
+    matchpass = data.n_pass2;
+    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email + "';", function (error, results, fields) {
+        if (JSON.stringify(results) == "[]") {
+            if (rawpass == matchpass){
+    
+                bcrypt.hash(rawpass, saltRounds, function (err, hash) {
+                    // connection.query('INSERT INTO `admins` (EMAIL , PASSWORD) VALUES (' + data.email + ', ' + hash + ')');
+                    connection.query("INSERT INTO `admins` (EMAIL , PASSWORD) VALUES ('" + email + "','" + hash + "');", function (error, results, fields) {
+                        if (error) {
+                            console.log(error);
+                            response.redirect("/admin/register");
+                        }else{
+                            console.log("Sucessfully Registered!");
+                            response.render('admin', {
+                                user: request.session.user,
+                                errormsg: "Now Login to Use Admin Dashboard!"
+                            });
+                        }
+            
+                    });
+                });
+                
+                // console.log("OK REG" , email);
+                // console.log(results);
+                }else{
+                    response.render("reg" , {
+                        user : request.session.user,
+                        errormsg : "Password's do not match"
+                    });
+                    console.log("PASS MATCH NO");
+                }
+            }else{
+                response.render("reg" , {
+                    user : request.session.user,
+                    errormsg : "User Account with this email already exists"
+                });
+                // console.log("ALRDY REG");
+            }
+            });
+        
+        
 });
 
 app.get("/del" , function(request , response){

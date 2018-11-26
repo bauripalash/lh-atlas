@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>LibreHealth Atlas - Create New Account</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="static/lh-logo-o.jpg">
+    <meta name="description" content="Atlas for librehealth to show users , events and support">
+    <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+    <link type="text/css" href="/static/style.css" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!--Top navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light nav-down">
+        <div class="container pr-0">
+            <a class="navbar-brand" href="/">
+                <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528"
+                    alt="logo"> <b style="color:white;">Atlas</b>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-togg">
+                <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item dropdown">
+                        <a style="color: white;" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <span class="fa fa-user"></span> More </a>
+                        <ul class="dropdown-menu">
+                            <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
+                            <li id="login-btn" class="text-center"><a href="/admin/register">Register</a></li>
+                            <div class="dropdown-divider"></div>
+                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">About</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<div id="login-area" class="container pt-3">
+    <div class="row justify-content-sm-center">
+      <div class="col-sm-6 col-md-4">
+  
+        <div class="card border-info text-center">
+          <div class="card-header">
+            Create New Account
+          </div>
+          <div class="card-body">
+            <img src="/static/user.png">
+            <h4 class="text-center">LibreHealth Atlas</h4>
+            <% if (errormsg){ %>
+                <p style="color: red;" class="text-center"><%= errormsg %> </p>
+                <% } %>
+            <form action="/register" method="POST"  class="form-signin">
+              <input type="text" class="form-control mb-2" placeholder="Email" name="n_email" required autofocus>
+              <input type="password" id="pass1" class="form-control mb-2" placeholder="Password" name="n_pass" required>
+              <input type="password" id="pass2" class="form-control mb-2" placeholder="Password" name="n_pass2" required>
+              <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Create Account</button>
+              <p> Already Have a Account? <a href="/admin">Login Here</a> </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"></script>
+      <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+      integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+      crossorigin=""></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <script src="static/admin.js"></script>
+
+</body>
+
+</html>

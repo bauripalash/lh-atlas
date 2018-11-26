@@ -39,17 +39,18 @@
                             <span class="fa fa-user"></span> More </a>
                         <ul class="dropdown-menu">
                             <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
+                            <li id="login-btn" class="text-center"><a href="/admin/register">Register</a></li>
                             <li id="newmarker" style="display: none;" class="text-center"><a href="#" data-toggle="modal"
                                     data-target="#newmarkermodal">New
                                     Marker</a></li>
                             <li id="getjson" style="display: none;" class="text-center"><a data-toggle="modal"
                                 data-target="#export-json" href="#">Export
                                     JSON</a></li>
-                            <div class="dropdown-divider"></div>
+                            <div id="signout" style="display: none;" class="dropdown-divider"></div>
                             <li id="signout" style="display: none;" class="text-center"><a href="/signout">Sign
                                     Out</a></li>
                             <div class="dropdown-divider"></div>
-                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">Credits</a></li>
+                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">About</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -201,6 +202,7 @@
                   <input type="text" class="form-control mb-2" placeholder="Email" name="email" required autofocus>
                   <input type="password" class="form-control mb-2" placeholder="Password" name="password" required>
                   <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Sign in</button>
+                  <p> New User? <a href="/admin/register/">Create Account Here!</a> </p>
                 </form>
               </div>
             </div>
