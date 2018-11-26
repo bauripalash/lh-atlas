@@ -87,28 +87,30 @@ app.get('/login', function (request, response) {
 });
 
 app.post('/login', function (request, response) {
-    data = request.body;
+    var data = request.body;
+    var email = data.email.trim();
+  var pass = data.password.trim();
 
-    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
+    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email+ "';", function (error, results, fields) {
         if (JSON.stringify(results) == "[]") {
             response.render('admin', {
                 user: request.session.userid,
                 errormsg: "Wrong Email Address"
             });
         } else {
-            bcrypt.hash(data.password, saltRounds, function (err, hash) {
+            bcrypt.hash(pass, saltRounds, function (err, hash) {
                 // connection.query('INSERT INTO `admins` (EMAIL , PASSWORD) VALUES (' + data.email + ', ' + hash + ')');
-                connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
+                connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email + "';", function (error, results, fields) {
                     if (error) {
                         console.log(error);
                         return;
                     }
                     // console.log(results[0].PASSWORD);
-                    bcrypt.compare(data.password, results[0].PASSWORD, function (err, res) {
+                    bcrypt.compare(pass, results[0].PASSWORD, function (err, res) {
                         if (res) {
                             var sess = request.session;
-                            sess.userid = data.email;
-                            console.log("logged in : " + data.email);
+                            sess.userid = email;
+                            console.log("logged in : " + email);
                             request.session.save(function (err) {
                                 console.log("session saved");
                                 response.redirect("/admin");
@@ -142,18 +144,18 @@ app.post('/login', function (request, response) {
 //     c_date TIMESTAMP
 // );
 app.post("/addmarker", function (request, response) {
-    data = request.body;
-    name = data.m_name;
-    tool = data.m_tool;
-    version = data.m_version;
-    location = data.m_location;
-    lat = data.m_lat;
-    lng = data.m_lng;
-    intro = data.m_intro;
-    pnum = data.m_pnum;
-    email = data.m_contactEmail;
-    phone = data.m_contactPhone;
-    created_by = request.session.userid;
+    var data = request.body;
+    var name = data.m_name;
+    var tool = data.m_tool;
+    var version = data.m_version;
+    var location = data.m_location;
+    var lat = data.m_lat;
+    var lng = data.m_lng;
+    var intro = data.m_intro;
+    var pnum = data.m_pnum;
+    var email = data.m_contactEmail;
+    var phone = data.m_contactPhone;
+    var created_by = request.session.userid;
     console.log(created_by);
 
     connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email +  '","' + created_by + '")', function (error, results, fields) {
@@ -179,9 +181,9 @@ app.get("/admin/register", function (request, response) {
 
 app.post("/register", function (request, response) {
     data = request.body;
-    email = data.n_email;
-    rawpass = data.n_pass;
-    matchpass = data.n_pass2;
+    email = data.n_email.trim();
+    rawpass = data.n_pass.trim();
+    matchpass = data.n_pass2.trim();
     connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email + "';", function (error, results, fields) {
         if (JSON.stringify(results) == "[]") {
             if (rawpass == matchpass){
@@ -230,7 +232,7 @@ app.get("/del" , function(request , response){
 
 app.post("/del", function (request, response) {
     data = request.body;
-    id = data.mid;
+    id = data.mid.trim();
 
     connection.query('DELETE FROM `newmarkers` WHERE id = "' + id + '";', function (error, results, fields) {
         if (error) {
