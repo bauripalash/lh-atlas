@@ -145,16 +145,16 @@ app.post('/login', function (request, response) {
 // );
 app.post("/addmarker", function (request, response) {
     var data = request.body;
-    var name = data.m_name;
-    var tool = data.m_tool;
-    var version = data.m_version;
-    var location = data.m_location;
-    var lat = data.m_lat;
-    var lng = data.m_lng;
-    var intro = data.m_intro;
-    var pnum = data.m_pnum;
-    var email = data.m_contactEmail;
-    var phone = data.m_contactPhone;
+    var name = data.m_name.trim();
+    var tool = data.m_tool.trim();
+    var version = data.m_version.trim();
+    var location = data.m_location.trim();
+    var lat = data.m_lat.trim();
+    var lng = data.m_lng.trim();
+    var intro = data.m_intro.trim();
+    var pnum = data.m_pnum.trim();
+    var email = data.m_contactEmail.trim();
+    var phone = data.m_contactPhone.trim();
     var created_by = request.session.userid;
     console.log(created_by);
 
@@ -169,7 +169,7 @@ app.post("/addmarker", function (request, response) {
     response.redirect("/admin");
 });
 
-app.get("/admin/register", function (request, response) {
+app.get("/register", function (request, response) {
 
     response.render("reg" , {
         user : request.session.userid,
@@ -193,7 +193,7 @@ app.post("/register", function (request, response) {
                     connection.query("INSERT INTO `admins` (EMAIL , PASSWORD) VALUES ('" + email + "','" + hash + "');", function (error, results, fields) {
                         if (error) {
                             console.log(error);
-                            response.redirect("/admin/register");
+                            response.redirect("register");
                         }else{
                             console.log("Sucessfully Registered!");
                             response.render('admin', {
