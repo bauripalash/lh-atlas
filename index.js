@@ -75,23 +75,48 @@ app.get('/admin', function (request, response) {
     var sess = request.session;
     console.log("session userid : " + sess.userid);
     user = sess.userid;
+    if (user){
+        connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + user  + "';", function (error, results, fields) {
+            if (results[0].SUPER == 1){
+                response.render("admin", {
+                    user: user,
+                    isadmin : "true",
+                    errormsg: ""
+                });
+            }else{
+                response.render("admin", {
+                    user: user,
+                    isadmin : "",
+                    errormsg: ""
+                });
+            }
+        });
+    }else{
+        response.render("admin", {
+            user: user,
+            isadmin : "",
+            errormsg: ""
+        });
+    }
 
-    response.render("admin", {
-        user: user,
-        errormsg: ""
-    });
+    // response.render("admin", {
+    //     user: user,
+    //     isadmin : "false",
+    //     errormsg: ""
+    // });
+
 });
 
 app.get('/login', function (request, response) {
-    request.redirect("/admin");
+    response.redirect("/admin");
 });
 
 app.post('/login', function (request, response) {
     var data = request.body;
     var email = data.email.trim();
-  var pass = data.password.trim();
+    var pass = data.password.trim();
 
-    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email+ "';", function (error, results, fields) {
+    connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email + "';", function (error, results, fields) {
         if (JSON.stringify(results) == "[]") {
             response.render('admin', {
                 user: request.session.userid,
@@ -158,7 +183,7 @@ app.post("/addmarker", function (request, response) {
     var created_by = request.session.userid;
     console.log(created_by);
 
-    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email +  '","' + created_by + '")', function (error, results, fields) {
+    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email + '","' + created_by + '")', function (error, results, fields) {
         if (error) {
             console.log(error);
             return;
@@ -171,9 +196,9 @@ app.post("/addmarker", function (request, response) {
 
 app.get("/register", function (request, response) {
 
-    response.render("reg" , {
-        user : request.session.userid,
-        errormsg : ""
+    response.render("reg", {
+        user: request.session.userid,
+        errormsg: ""
     });
 
 });
@@ -186,53 +211,57 @@ app.post("/register", function (request, response) {
     matchpass = data.n_pass2.trim();
     connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + email + "';", function (error, results, fields) {
         if (JSON.stringify(results) == "[]") {
-            if (rawpass == matchpass){
-    
+            if (rawpass == matchpass) {
+
                 bcrypt.hash(rawpass, saltRounds, function (err, hash) {
                     // connection.query('INSERT INTO `admins` (EMAIL , PASSWORD) VALUES (' + data.email + ', ' + hash + ')');
-                    connection.query("INSERT INTO `admins` (EMAIL , PASSWORD) VALUES ('" + email + "','" + hash + "');", function (error, results, fields) {
+                    connection.query("INSERT INTO `admins` (EMAIL , PASSWORD , SUPER) VALUES ('" + email + "','" + hash + "',0);", function (error, results, fields) {
                         if (error) {
                             console.log(error);
-                            response.redirect("register");
-                        }else{
+                            response.render('reg', {
+                                user: request.session.userid,
+                                errormsg: "OMG! Cannot Create account! MySQL Error!"
+                            });
+                        } else {
                             console.log("Sucessfully Registered!");
                             response.render('admin', {
                                 user: request.session.userid,
                                 errormsg: "Now Login to Use Admin Dashboard!"
                             });
                         }
-            
+
                     });
                 });
-                
+
                 // console.log("OK REG" , email);
                 // console.log(results);
-                }else{
-                    response.render("reg" , {
-                        user : request.session.userid,
-                        errormsg : "Password's do not match"
-                    });
-                    console.log("PASS MATCH NO");
-                }
-            }else{
-                response.render("reg" , {
-                    user : request.session.userid,
-                    errormsg : "User Account with this email already exists"
+            } else {
+                response.render("reg", {
+                    user: request.session.userid,
+                    errormsg: "Password's do not match"
                 });
-                // console.log("ALRDY REG");
+                console.log("PASS MATCH NO");
             }
+        } else {
+            response.render("reg", {
+                user: request.session.userid,
+                errormsg: "User Account with this email already exists"
             });
-        
-        
+            // console.log("ALRDY REG");
+        }
+    });
+
+
 });
 
-app.get("/del" , function(request , response){
+app.get("/del", function (request, response) {
     response.redirect("/admin");
 });
 
 app.post("/del", function (request, response) {
     data = request.body;
-    id = data.mid.trim();
+    id = data.mid;
+    console.log(id);
 
     connection.query('DELETE FROM `newmarkers` WHERE id = "' + id + '";', function (error, results, fields) {
         if (error) {
@@ -272,15 +301,90 @@ app.get('/api/markers/:tool', function (req, res) {
     }
 });
 
-app.get('/api/markers/by/:em', function (req, res) {
-        connection.query("SELECT * FROM `newmarkers` WHERE created_by = '" + req.params.em.toLowerCase() + "';", function (error, results, fields) {
-            if (error) {
-                console.log(error);
-                return;
+app.get('/api/markers/admin/:em', function (req, res) {
+    if (req.session.userid) {
+        connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + req.params.em.toLowerCase() + "';", function (error, results, fields) {
+            if (results[0].SUPER == 0) {
+                connection.query("SELECT * FROM `newmarkers` WHERE created_by = '" + req.params.em.toLowerCase() + "';", function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    res.json(results);
+                });
+            } else if (results[0].SUPER == 1) {
+                connection.query("SELECT * FROM `newmarkers`", function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    res.json(results);
+                });
+            } else {
+                connection.query("SELECT * FROM `newmarkers` WHERE created_by = '" + req.params.em.toLowerCase() + "';", function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+                    res.json(results);
+                });
             }
-            res.json(results);
-        });
 
+
+        });
+    } else {
+        res.redirect("/");
+    }
+});
+
+app.get("/api/nonadmin" , function (req, res) {
+    if (req.session.userid){
+
+    
+    connection.query("SELECT * FROM `admins` WHERE SUPER != 1 ;", function (error, results, fields) {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        res.json(results);
+    });
+}else{
+    res.redirect("/");
+}
+});
+
+app.get("/api/admins" , function (req, res) {
+    if (req.session.userid){
+
+    
+    connection.query("SELECT * FROM `admins` WHERE SUPER = 1 ;", function (error, results, fields) {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        res.json(results);
+    });
+}else{
+    res.redirect("/");
+}
+});
+
+app.post("/makeadmin" , function (req, res) {
+    email = req.body.ue;
+
+    if (req.session.userid){
+
+    
+    connection.query("UPDATE `admins` SET SUPER = 1  WHERE EMAIL = '"+email+"';", function (error, results, fields) {
+        if (error) {
+            console.log(error);
+            return;
+        }
+        res.json(results);
+    });
+}else{
+    res.redirect("/");
+}
 });
 
 

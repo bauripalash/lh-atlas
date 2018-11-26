@@ -101,7 +101,7 @@ var rad_value = function(){
         data: {
             labels: ["EHR", "Toolkit", "Radiology"],
             datasets: [{
-                label: "Products Used",
+                label: "Total Products Used",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [ehr_value(), toolkit_value(), rad_value()],
