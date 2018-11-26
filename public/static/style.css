@@ -43,12 +43,13 @@ a.disabled {
 .legend {
 
     position: absolute;
-    z-index: 999999999999999999999;
-    right: 10%;
+    z-index: 999;
+    right: 5%;
     top: 25%;
     max-width: 140px;
     background: #ffffff;
     opacity: 0.7;
+    border-radius: 5%;
 }
 
 /* .ibox {

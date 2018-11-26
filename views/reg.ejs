@@ -32,22 +32,58 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar-togg">
-                <ul class="navbar-nav ml-auto">
-
-                    <li class="nav-item dropdown">
-                        <a style="color: white;" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                            <span class="fa fa-user"></span> More </a>
-                        <ul class="dropdown-menu">
-                            <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
-                            <li id="login-btn" class="text-center"><a href="/admin/register">Register</a></li>
-                            <div class="dropdown-divider"></div>
-                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">About</a></li>
+                    <ul class="navbar-nav ml-auto">
+                            <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal"
+                                    data-target="#helpmodal">About</a></li>
+                            <% if (!user){ %>
+                                <li id="login-btn" class="nav-item navicon">
+                                <a class="nav-link" style="color: white;" href="/admin">Login</a>
+        
+                            </li>
+                            <% } %>
+        
+                            <% if (user){ %>
+                            <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">Logout</a></li>
+                            <% } %>
+        
+        
                         </ul>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>
+    <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">About</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
+                            and Radiology. This will be useful for new users to find fellow user and also request help and
+                            support in from them their locality.
+                        </div>
+                        <br>
+                        <small>
+                            <div>Special Thanks To ,</div>
+    
+                            <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                                from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
+                                by
+                                <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
+                                    target="_blank">CC
+                                    3.0 BY</a></div>
+                            <div>
+                                All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                            </div>
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <div id="login-area" class="container pt-3">
     <div class="row justify-content-sm-center">
@@ -86,6 +122,14 @@
       crossorigin=""></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
   <script src="static/admin.js"></script>
+
+  <% if (user){ %>
+    <script>
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("reg-btn").style.display = "none";
+        window.location = "/admin";
+    </script>
+    <% } %>
 
 </body>
 

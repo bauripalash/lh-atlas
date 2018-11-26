@@ -92,7 +92,7 @@ app.post('/login', function (request, response) {
     connection.query("SELECT * FROM `admins` WHERE EMAIL = '" + data.email + "';", function (error, results, fields) {
         if (JSON.stringify(results) == "[]") {
             response.render('admin', {
-                user: request.session.user,
+                user: request.session.userid,
                 errormsg: "Wrong Email Address"
             });
         } else {
@@ -153,7 +153,10 @@ app.post("/addmarker", function (request, response) {
     pnum = data.m_pnum;
     email = data.m_contactEmail;
     phone = data.m_contactPhone;
-    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email + '")', function (error, results, fields) {
+    created_by = request.session.userid;
+    console.log(created_by);
+
+    connection.query('INSERT INTO `newmarkers` (name , tool , version , location , lat , lng ,intro, phone , pnum , email , created_by) VALUES ("' + name + '", "' + tool + '", "' + version + '", "' + location + '", "' + lat + '", "' + lng + '", "' + intro + '", "' + phone + '", "' + pnum + '","' + email +  '","' + created_by + '")', function (error, results, fields) {
         if (error) {
             console.log(error);
             return;
@@ -167,7 +170,7 @@ app.post("/addmarker", function (request, response) {
 app.get("/admin/register", function (request, response) {
 
     response.render("reg" , {
-        user : request.session.user,
+        user : request.session.userid,
         errormsg : ""
     });
 
@@ -192,7 +195,7 @@ app.post("/register", function (request, response) {
                         }else{
                             console.log("Sucessfully Registered!");
                             response.render('admin', {
-                                user: request.session.user,
+                                user: request.session.userid,
                                 errormsg: "Now Login to Use Admin Dashboard!"
                             });
                         }
@@ -204,14 +207,14 @@ app.post("/register", function (request, response) {
                 // console.log(results);
                 }else{
                     response.render("reg" , {
-                        user : request.session.user,
+                        user : request.session.userid,
                         errormsg : "Password's do not match"
                     });
                     console.log("PASS MATCH NO");
                 }
             }else{
                 response.render("reg" , {
-                    user : request.session.user,
+                    user : request.session.userid,
                     errormsg : "User Account with this email already exists"
                 });
                 // console.log("ALRDY REG");
@@ -265,6 +268,17 @@ app.get('/api/markers/:tool', function (req, res) {
             result: "No Data Found"
         });
     }
+});
+
+app.get('/api/markers/by/:em', function (req, res) {
+        connection.query("SELECT * FROM `newmarkers` WHERE created_by = '" + req.params.em.toLowerCase() + "';", function (error, results, fields) {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            res.json(results);
+        });
+
 });
 
 

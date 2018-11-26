@@ -31,50 +31,63 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar-togg">
+
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item navicon">
                         <a style="color: white;" href="#" class="nav-link" onclick="toggle_legend()"><i class="fa fa-info"></i>
                             Legend</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a style="color: white;" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                            <span class="fa fa-user"></span> More </a>
-                        <ul class="dropdown-menu">
-                            <li id="login-btn" class="text-center"><a href="/admin">Login</a></li>
-                            <li id="login-btn" class="text-center"><a href="/admin/register">Register</a></li>
-                            <% if (user){ %>
-                            <li id="admin-btn" class="text-center"><a href="/admin">Admin</a></li>
-                            <% } %>
+                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal"
+                            data-target="#helpmodal">About</a></li>
+                    <!-- <li class="nav-item navicon">|</li> -->
+                    <% if (!user){ %>
+                    <li id="login-btn" class="nav-item navicon">
+                        <a class="nav-link" style="color: white;" href="/admin">Login</a>
 
-                            <% if (user){ %>
-                            <li id="signout" style="" class="text-center"><a href="/signout">Sign
-                                    Out</a></li>
-                            <% } %>
-                            <div class="dropdown-divider"></div>
-                            <li class="text-center"><a href="#" data-toggle="modal" data-target="#helpmodal">Credits</a></li>
-                        </ul>
                     </li>
+                    <li id="reg-btn" class="nav-item naviconr"><a style="color: white;" class="nav-link" href="/admin/register">Register</a></li>
+                    <% } %>
+                    <% if (user){ %>
+
+                    <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">Admin</a></li>
+                    <% } %>
+
+                    <% if (user){ %>
+                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">Logout</a></li>
+                    <% } %>
+
+
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Credits</h4>
+                    <h4 class="modal-title">About</h4>
                 </div>
                 <div class="modal-body">
-                    <div>Made by, Palash Bauri</div>
-                    <br>
-                    <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
-                        from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by
-                        <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC
-                            3.0 BY</a></div>
                     <div>
-                        All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                        LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
+                        and Radiology. This will be useful for new users to find fellow user and also request help and
+                        support in from them their locality.
                     </div>
+                    <br>
+                    <small>
+                        <div>Special Thanks To ,</div>
+
+                        <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
+                            by
+                            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
+                                target="_blank">CC
+                                3.0 BY</a></div>
+                        <div>
+                            All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                        </div>
+                    </small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -104,11 +117,12 @@
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
         crossorigin=""></script>
     <script src="static/main.js"></script>
-    <% if (user){ %>
+    <!-- <% if (user){ %>
     <script>
         document.getElementById("login-btn").style.display = "none";
+        document.getElementById("reg-btn").style.display = "none";
     </script>
-    <% } %>
+    <% } %> -->
 </body>
 
 </html>
