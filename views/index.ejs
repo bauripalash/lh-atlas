@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>LibreHealth Atlas</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
-    <link rel="icon" href="static/lh-logo-o.jpg">
+    <link rel="icon" href="static/imgs/lh-logo-o.jpg">
     <meta name="description" content="Atlas for librehealth to show users , events and support">
     <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
 
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
         crossorigin="" />
-    <link type="text/css" href="/static/style.css" rel="stylesheet">
+    <link type="text/css" href="/static/css/style.css" rel="stylesheet">
 </head>
 
 
@@ -37,23 +37,27 @@
                         <a style="color: white;" href="#" class="nav-link" onclick="toggle_legend()"><i class="fa fa-info"></i>
                             Legend</a>
                     </li>
-                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal"
-                            data-target="#helpmodal">About</a></li>
+                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal" data-target="#helpmodal">
+                            <i class="fa fa-question-circle"></i> About</a></li>
                     <!-- <li class="nav-item navicon">|</li> -->
                     <% if (!user){ %>
                     <li id="login-btn" class="nav-item navicon">
-                        <a class="nav-link" style="color: white;" href="/admin">Login</a>
+                        <a class="nav-link" style="color: white;" href="/admin"> <i class="fa fa-user-circle-o"></i>
+                            Login</a>
 
                     </li>
-                    <li id="reg-btn" class="nav-item naviconr"><a style="color: white;" class="nav-link" href="/register">Register</a></li>
+                    <li id="reg-btn" class="nav-item naviconr"><a style="color: white;" class="nav-link" href="/register">
+                            <i class="fa fa-sign-in"></i> Register</a></li>
                     <% } %>
                     <% if (user){ %>
 
-                    <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">Admin</a></li>
+                    <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">
+                            <i class="fa fa-tachometer"></i> Admin</a></li>
                     <% } %>
 
                     <% if (user){ %>
-                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">Logout</a></li>
+                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">
+                            <i class="fa fa-sign-out"></i> Logout</a></li>
                     <% } %>
 
 
@@ -98,9 +102,9 @@
     <div id="legend" class="legend">
         <div class="container">
             <h5>Legend</h5>
-            <p><img src="static/ehr.png">&nbsp;EHR</p>
-            <p><img src="static/toolkit.png">&nbsp;Toolkit</p>
-            <p><img src="static/radiology.png">&nbsp;Radiology</p>
+            <p><img src="static/imgs/ehr.png">&nbsp;EHR</p>
+            <p><img src="static/imgs/toolkit.png">&nbsp;Toolkit</p>
+            <p><img src="static/imgs/radiology.png">&nbsp;Radiology</p>
         </div>
 
     </div>
@@ -116,13 +120,19 @@
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
         crossorigin=""></script>
-    <script src="static/main.js"></script>
+    <script src="static/js/main.js"></script>
     <!-- <% if (user){ %>
     <script>
         document.getElementById("login-btn").style.display = "none";
         document.getElementById("reg-btn").style.display = "none";
     </script>
     <% } %> -->
+
+    <script>
+        console.log(
+            "Are You A Developer? If Not Don't Do Anything Silly Here Please! If Somebody Told You to type some codes here , JUST DON'T DO IT! "
+        )
+    </script>
 </body>
 
 </html>
