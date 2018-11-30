@@ -4,17 +4,16 @@
     <meta charset="utf-8">
     <title>LibreHealth Atlas - Create New Account</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
-    <link rel="icon" href="static/lh-logo-o.jpg">
+    <link rel="icon" href="static/imgs/lh-logo-o.jpg">
     <meta name="description" content="Atlas for librehealth to show users , events and support">
     <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-  crossorigin=""/>
-    <link type="text/css" href="/static/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <link type="text/css" href="/static/css/style.css" rel="stylesheet">
 </head>
 
 
@@ -32,102 +31,112 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar-togg">
-                    <ul class="navbar-nav ml-auto">
-                            <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal"
-                                    data-target="#helpmodal">About</a></li>
-                            <% if (!user){ %>
-                                <li id="login-btn" class="nav-item navicon">
-                                <a class="nav-link" style="color: white;" href="/admin">Login</a>
-        
-                            </li>
-                            <% } %>
-        
-                            <% if (user){ %>
-                            <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">Logout</a></li>
-                            <% } %>
-        
-        
-                        </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal" data-target="#helpmodal">
+                            <i class="fa fa-question-circle"></i> About</a></li>
+                    <% if (!user){ %>
+                    <li id="login-btn" class="nav-item navicon">
+                        <a class="nav-link" style="color: white;" href="/admin"> <i class="fa fa-user-circle-o"></i>
+                            Login</a>
+
+                    </li>
+                    <% } %>
+
+                    <% if (user){ %>
+                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">
+                            <i class="fa fa-sign-out"></i> Logout</a></li>
+                    <% } %>
+
+
+                </ul>
             </div>
         </div>
     </nav>
     <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">About</h4>
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">About</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
+                        and Radiology. This will be useful for new users to find fellow user and also request help and
+                        support in from them their locality.
                     </div>
-                    <div class="modal-body">
+                    <br>
+                    <small>
+                        <div>Special Thanks To ,</div>
+
+                        <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
+                            by
+                            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
+                                target="_blank">CC
+                                3.0 BY</a></div>
                         <div>
-                            LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
-                            and Radiology. This will be useful for new users to find fellow user and also request help and
-                            support in from them their locality.
+                            All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
                         </div>
-                        <br>
-                        <small>
-                            <div>Special Thanks To ,</div>
-    
-                            <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
-                                from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
-                                by
-                                <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
-                                    target="_blank">CC
-                                    3.0 BY</a></div>
-                            <div>
-                                All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
-                            </div>
-                        </small>
+                    </small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-area" class="container pt-3">
+        <div class="row justify-content-sm-center">
+            <div class="col-sm-6 col-md-4">
+
+                <div class="card border-info text-center">
+                    <div class="card-header">
+                        Create New Account
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <div class="card-body">
+                        <img src="/static/imgs/user.png">
+                        <h4 class="text-center">LibreHealth Atlas</h4>
+                        <% if (errormsg){ %>
+                        <p style="color: red;" class="text-center">
+                            <%= errormsg %>
+                        </p>
+                        <% } %>
+                        <form action="/admin/register" method="POST" class="form-signin">
+                            <input type="text" class="form-control mb-2" placeholder="Email" name="n_email" required
+                                autofocus>
+                            <input type="password" id="pass1" class="form-control mb-2" placeholder="Password" name="n_pass"
+                                required>
+                            <input type="password" id="pass2" class="form-control mb-2" placeholder="Password" name="n_pass2"
+                                required>
+                            <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Create Account</button>
+                            <p> Already Have a Account? <a href="/admin">Login Here</a> </p>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-<div id="login-area" class="container pt-3">
-    <div class="row justify-content-sm-center">
-      <div class="col-sm-6 col-md-4">
-  
-        <div class="card border-info text-center">
-          <div class="card-header">
-            Create New Account
-          </div>
-          <div class="card-body">
-            <img src="/static/user.png">
-            <h4 class="text-center">LibreHealth Atlas</h4>
-            <% if (errormsg){ %>
-                <p style="color: red;" class="text-center"><%= errormsg %> </p>
-                <% } %>
-            <form action="/register" method="POST"  class="form-signin">
-              <input type="text" class="form-control mb-2" placeholder="Email" name="n_email" required autofocus>
-              <input type="password" id="pass1" class="form-control mb-2" placeholder="Password" name="n_pass" required>
-              <input type="password" id="pass2" class="form-control mb-2" placeholder="Password" name="n_pass2" required>
-              <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Create Account</button>
-              <p> Already Have a Account? <a href="/admin">Login Here</a> </p>
-            </form>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-      crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-      crossorigin="anonymous"></script>
-      <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-      integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-      crossorigin=""></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-  <script src="static/admin.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="static/js/admin.js"></script>
 
-  <% if (user){ %>
+    <% if (user){ %>
     <script>
         window.location = "/admin";
     </script>
     <% } %>
+
+    <script>
+            console.log("Are You A Developer? If Not Don't Do Anything Silly Here Please! If Somebody Told You to type some codes here , JUST DON'T DO IT! ")
+    </script>
 
 </body>
 
