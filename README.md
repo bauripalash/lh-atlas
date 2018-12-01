@@ -27,11 +27,15 @@ JWT_SECRET= Your Very Secret Key (Keep it safe)
 |---|---|---|
 |`/api/markers`| Returns JSON list of all markers|No|
 |`/api/markers/product/<product>`|Returns JSON list of specific product where product can be `ehr` , `toolkit` or `radiology`| Yes|
+|`/api/markers/product/<product>/?country=<country>`|Returns JSON list of specific product of specific country where product can be `ehr` , `toolkit` or `radiology` and country must be the Initials of slected country| Yes|
+|`/api/markers/product/<product>/pnum`|Returns patient count of specific product where product can be `ehr` , `toolkit` or `radiology`| Yes|
+|`/api/markers/product/<product>/pnum/?country=<country>`|Returns patient count of specific product of specific country where product can be `ehr` , `toolkit` or `radiology`  and country must be the Initials of slected country| Yes|
 |`/api/markers/country/<country>`|Returns JSON list of specific country where country should be first two initial of country name| Yes|
 |`/api/markers/creator/<email>`|Returns JSON list of markers created by user with the mentioned email address|Yes|
 |`/api/nonadmins`| Returns JSON list of users who are not admins/super user| Yes|
 |`/api/admins`|Returns JSON list of all admins/super users|Yes|
 |`/api/allusers/`|Returns JSON list of all users|Yes|
+
 
 **Note** : Logged in Users don't need to generate token to use api
 
