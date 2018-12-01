@@ -94,7 +94,7 @@ routes.post("/makeadmin", (req, res) => {
     }
     let updateValues = { issuper : 1 };
     User.update(updateValues , { where: {email: email}})
-        .then(user => {
+        .then(() => {
             res.render("admin", {
                 infomsg: "Selected User Upgraded to SuperUser",
                 user: req.session.userid,
