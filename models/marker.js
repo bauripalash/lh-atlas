@@ -8,7 +8,7 @@ module.exports = (sequelize, type) => {
         name: type.STRING,
         product : type.STRING,
         version : type.STRING,
-        pnum : type.STRING,
+        pnum : type.INTEGER,
         lat : type.STRING,
         lng : type.STRING,
         country : type.STRING,

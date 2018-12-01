@@ -20,7 +20,6 @@ const errorFormatter = ({
     value,
     nestedErrors
 }) => {
-    // Build your resulting errors however you want! String, object, whatever - it works!
     return `${location}[${param}]: ${msg}`;
 };
 
@@ -56,7 +55,9 @@ routes.get('/markers/', function (req, res) {
 
 routes.get('/markers/product/:tool', function (req, res) {
     var tool = req.params.tool;
-    check(tool).isString()
+    check(tool).isString();
+    var country = req.query.country;
+    check(country).isString();
 
 
     var errors = validationResult(req).formatWith(errorFormatter);
@@ -66,7 +67,19 @@ routes.get('/markers/product/:tool', function (req, res) {
         });
         return;
     }
-    Marker.findAll({
+    if (country){
+        Marker.findAll({
+            where: {
+                product: tool,
+                country : country
+            }
+        })
+        .then(marker => {
+            console.log("hello product");
+            res.json(marker);
+        });
+    }else{
+        Marker.findAll({
             where: {
                 product: tool
             }
@@ -75,10 +88,76 @@ routes.get('/markers/product/:tool', function (req, res) {
             console.log("hello product");
             res.json(marker);
         });
+    }
+    
 
 });
 
-routes.get('/markers/country/:country', function (req, res) {
+routes.get('/markers/product/:tool/:pnum', function (req, res) {
+    var tool = req.params.tool;
+    var pnum = req.params.pnum;
+    var country = req.query.country;
+    check(tool).isString();
+    // var ptotal = 0;
+
+    var errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        res.status(400).send({
+            errors: errors.array()
+        });
+        return;
+    }
+
+    if (pnum == "pnum"){
+        if (country){
+            Marker.sum('pnum', { where: { product:  tool , country : country  }})
+        .then(sum => {
+            res.json({patients : sum});
+          })
+        }else{
+        Marker.sum('pnum', { where: { product:  tool  }})
+        .then(sum => {
+            res.json({patients : sum});
+          })
+        }
+
+
+    }else{
+        res.redirect("/markers/product/" + tool)
+    }
+
+
+});
+
+
+routes.get('/markers/country/:country/:pnum', function (req, res) {
+    var country = req.params.country;
+    var pnum = req.params.pnum;
+    check(country).isString();
+
+
+    var errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        res.status(400).send({
+            errors: errors.array()
+        });
+        return;
+    }
+    if (pnum == "pnum"){
+        Marker.sum('pnum', { where: { country:  country  }})
+        .then(sum => {
+            res.json({patients : sum});
+          })
+
+
+    }else{
+        res.redirect("/markers/country/" + country)
+    }
+
+});
+
+
+routes.get('/markers/country/:country/', function (req, res) {
     var country = req.params.country;
     check(country).isString();
 
@@ -90,6 +169,7 @@ routes.get('/markers/country/:country', function (req, res) {
         });
         return;
     }
+    
     Marker.findAll({
             where: {
                 country: country
