@@ -23,7 +23,7 @@ JWT_SECRET= Your Very Secret Key (Keep it safe)
 
 
 ## API Docs :
-|** URL**| **Usage**  | Token Needed|
+|URL|Usage|Token Needed|
 |---|---|---|
 |`/api/markers`| Returns JSON list of all markers|No|
 |`/api/markers/product/<product>`|Returns JSON list of specific product where product can be `ehr` , `toolkit` or `radiology`| Yes|
