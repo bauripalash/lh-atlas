@@ -391,7 +391,7 @@
         </div>
     </div>
 
-    
+
 
     <div class="modal fade" id="help-me" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -407,11 +407,12 @@
                         To Create a New Marker , Click on the <b>Create New Marker</b> button and fill the form
                     </div><br>
                     <div>
-                            To Delete a Marker Select delete marker and choose your marker.
-                        </div><br>
+                        To Delete a Marker Select delete marker and choose your marker.
+                    </div><br>
                     <div>
                         To Export JSON data click on the <b>Export JSON</b> and select from "All" , "Only EHR" , "Only
-                        Toolkit" , "Only Radiology" ,or Get Any Country's data by providing first two initials of your chosen country and click the button.
+                        Toolkit" , "Only Radiology" ,or Get Any Country's data by providing first two initials of your
+                        chosen country and click the button.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -620,7 +621,9 @@
     <script src="/static/js/admin.js"></script>
 
     <script>
-    console.log("Are You A Developer? If Not Don't Do Anything Silly Here Please! If Somebody Told You to type some codes here , JUST DON'T DO IT! ")
+        console.log(
+            "Are You A Developer? If Not Don't Do Anything Silly Here Please! If Somebody Told You to type some codes here , JUST DON'T DO IT! "
+        )
     </script>
 
     <% if (user){ %>
@@ -643,7 +646,7 @@
         // document.getElementById("ex-c").onchange(function(value){
         //     document.getElementById("country-export-btn").value = "/api/markers/country/" + value;
         // })
-        document.getElementById("ex-c").oninput = function(){
+        document.getElementById("ex-c").oninput = function () {
             $("#country-export-btn").attr("href", "/api/markers/country/" + document.getElementById("ex-c").value);
         };
 

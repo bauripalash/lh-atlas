@@ -1,20 +1,20 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var bcrypt = require('bcrypt');
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
 const expressValidator = require('express-validator');
 const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt');
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const cors = require('cors');
 require("dotenv").config();
-var admin_route = require("./routes/admin.js");
-var api_route = require("./routes/api.js");
+const admin_route = require("./routes/admin.js");
+const api_route = require("./routes/api.js");
 
-var saltRounds = 10;
-var COOKIE_TIME =3600000;
+const saltRounds = 10;
+const COOKIE_TIME = 3600000;
 
-var app = express();
+let app = express();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -34,10 +34,10 @@ app.use(session({
     }
 }));
 
-var PORT = process.env.PORT || 5005
+let PORT = process.env.PORT || 5005
 
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
@@ -45,53 +45,27 @@ app.use(function(req, res, next) {
 
 app.use(expressValidator());
 app.use(cookieParser())
-// CREATE TABLE admins(
-//     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//     EMAIL VARCHAR(255) NOT NULL,
-//     PASSWORD VARCHAR(255) NOT NULL,
-//     tstamp TIMESTAMP
-// );
 
-// var connection = mysql.createConnection({
-//     host: 'db4free.net',
-//     user: 'lhuser',
-//     password: 'librepassword',
-//     database: 'lhatlas'
-// });
-
-// connection.connect(function (err) {
-//     if (err) {
-//         console.error('error connecting: ' + err.stack);
-//         return;
-//     }
-
-//     console.log('connected as id ' + connection.threadId);
-// });
-
-// const jwtMW = exjwt({
-//     secret: process.env.JWT_SECRET
-// });
-
-app.use("/admin" , admin_route);
-app.use("/api" , api_route);
+app.use("/admin", admin_route);
+app.use("/api", api_route);
 
 
 
 
-app.get('/', function (request, response) {
+app.get('/', (request, response) => {
 
-    var sess = request.session;
+    let sess = request.session;
     // console.log("session userid : " + sess.userid);
-    user = sess.userid;
+    let user = sess.userid;
 
     response.render("index", {
         user: user
     });
 });
-app.get('/signout', function (request, response) {
+app.get('/signout', (request, response) => {
 
-    
-    request.session.destroy(function (err) {
+
+    request.session.destroy((err) => {
         console.log("Logged Out");
     })
     response.clearCookie('token');
@@ -100,12 +74,12 @@ app.get('/signout', function (request, response) {
 
 
 
-app.get('/login', function (request, response) {
+app.get('/login', (request, response) => {
     response.redirect("/admin");
 });
 
 
-app.get("/register", function (request, response) {
+app.get("/register", (request, response) => {
 
     response.render("reg", {
         user: request.session.userid,
@@ -117,7 +91,7 @@ app.get("/register", function (request, response) {
 
 
 
-app.get("/del", function (request, response) {
+app.get("/del", (request, response) => {
     response.redirect("/admin");
 });
 
@@ -125,6 +99,6 @@ app.get("/del", function (request, response) {
 
 
 // listen for requests :)
-var listener = app.listen(PORT, function () {
+let listener = app.listen(PORT, function () {
     console.log('Your app is listening on port ' + listener.address().port);
 });

@@ -23,18 +23,18 @@ const errorFormatter = ({
     return `${msg}`;
 };
 
-var saltRounds = 10;
-var COOKIE_TIME =3600000;
+let saltRounds = 10;
+let COOKIE_TIME = 3600000;
 var bcrypt = require('bcrypt');
 
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-routes.get('/', function (request, response) {
-    var sess = request.session;
+routes.get('/', (request, response) => {
+    let sess = request.session;
     console.log("session userid : " + sess.userid);
-    user = sess.userid;
+    let user = sess.userid;
 
     if (user) {
         User.findAll({
@@ -44,10 +44,10 @@ routes.get('/', function (request, response) {
             })
             .spread((user) => {
                 if (user.issuper == 1) {
-                    var sess = request.session;
+                    let sess = request.session;
                     sess.issuper = true;
                     // console.log("logged in : " + email);
-                    request.session.save(function (err) {
+                    request.session.save((err) => {
                         console.log("session saved");
                         // response.redirect("/admin");
                     })
@@ -80,19 +80,19 @@ routes.get('/', function (request, response) {
 
 });
 
-routes.post("/makeadmin", function (req, res) {
-    var email = req.params.ue;
+routes.post("/makeadmin", (req, res) => {
+    let email = req.params.ue;
     check(email).isEmail();
 
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
             errors: errors.array()
         });
         return;
     }
-    var UPDATE = {
+    let UPDATE = {
         isuper: 1
     };
 
@@ -105,33 +105,33 @@ routes.post("/makeadmin", function (req, res) {
             res.render("admin", {
                 infomsg: "Selected User Upgraded to SuperUser",
                 user: request.session.userid,
-            isadmin: request.session.issuper,
-            errormsg: "",
+                isadmin: request.session.issuper,
+                errormsg: "",
             });
         }).catch(function (err) {
             res.render("admin", {
                 infomsg: "Failed to Upgrade Selected User to SuperUser , Contact Tech Support!",
                 user: request.session.userid,
-            isadmin: request.session.issuper,
-            errormsg: "",
+                isadmin: request.session.issuper,
+                errormsg: "",
             });
         });
 
 
 });
 
-routes.get("/del", function (request, response) {
+routes.get("/del", (request, response) => {
     response.redirect("/admin");
 });
 
-routes.post("/del", check('mid').isNumeric().withMessage("Marker Id is not valid") , function (request, response) {
-    data = request.body;
-    id = data.mid;
+routes.post("/del", check('mid').isNumeric().withMessage("Marker Id is not valid"), (request, response) => {
+    let data = request.body;
+    let id = data.mid;
     console.log(id);
-    
 
 
-    var errors = validationResult(request).formatWith(errorFormatter);
+
+    let errors = validationResult(request).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         response.render("admin", {
             infomsg: JSON.stringify(errors.array()),
@@ -153,62 +153,49 @@ routes.post("/del", check('mid').isNumeric().withMessage("Marker Id is not valid
                 user: request.session.userid,
                 isadmin: request.session.issuper,
                 errormsg: "",
-                });
-        }).catch(function (err) {
+            });
+        }).catch((err) => {
             response.render("admin", {
                 infomsg: "Failed to Delete Selected Marker",
                 user: request.session.userid,
                 isadmin: request.session.issuper,
                 errormsg: "",
-                });
+            });
         });
 
 
 });
 
 routes.post("/addmarker", [
-check('m_name').isString().withMessage("Marker Name is not valid"),
-check('m_tool').isString().withMessage("Product Name is not valid"),
-check('m_version').isString().withMessage("Product Version is not valid"),
-check('m_location').isString().withMessage("Marker Address is not valid"),
-check('m_lat').isNumeric().withMessage("Marker Latitude is not valid"),
-check('m_lng').isNumeric().withMessage("Marker Longitude is not valid"),
-check('m_intro').isString().withMessage("Marker Description is not valid"),
-check('m_pnum').isNumeric().withMessage("Marker Patients Number is not valid"),
-check('m_contactEmail').isEmail().withMessage("Marker Contact Email is not valid"),
-check('m_country').isString().withMessage("Marker Country is not valid")] , (request, response) => {
+    check('m_name').isString().withMessage("Marker Name is not valid"),
+    check('m_tool').isString().withMessage("Product Name is not valid"),
+    check('m_version').isString().withMessage("Product Version is not valid"),
+    check('m_location').isString().withMessage("Marker Address is not valid"),
+    check('m_lat').isNumeric().withMessage("Marker Latitude is not valid"),
+    check('m_lng').isNumeric().withMessage("Marker Longitude is not valid"),
+    check('m_intro').isString().withMessage("Marker Description is not valid"),
+    check('m_pnum').isNumeric().withMessage("Marker Patients Number is not valid"),
+    check('m_contactEmail').isEmail().withMessage("Marker Contact Email is not valid"),
+    check('m_country').isString().withMessage("Marker Country is not valid")
+], (request, response) => {
 
-    var data = request.body;
-    var name = data.m_name.trim();
-    var tool = data.m_tool.trim();
-    var version = data.m_version.trim();
-    var location = data.m_location.trim();
-    var country = data.m_country.trim();
-    var lat = data.m_lat.trim();
-    var lng = data.m_lng.trim();
-    var intro = data.m_intro.trim();
-    var pnum = data.m_pnum.trim();
-    var email = data.m_contactEmail.trim();
-    var website = data.m_website.trim();
-    var phone = data.m_contactPhone.trim();
-    var created_by = request.session.userid;
+    let data = request.body;
+    let name = data.m_name.trim();
+    let tool = data.m_tool.trim();
+    let version = data.m_version.trim();
+    let location = data.m_location.trim();
+    let country = data.m_country.trim();
+    let lat = data.m_lat.trim();
+    let lng = data.m_lng.trim();
+    let intro = data.m_intro.trim();
+    let pnum = data.m_pnum.trim();
+    let email = data.m_contactEmail.trim();
+    let website = data.m_website.trim();
+    let phone = data.m_contactPhone.trim();
+    let created_by = request.session.userid;
     console.log(created_by);
 
-    // check(name).isString();
-    // check(tool).isString();
-    // check(version).isString();
-    // check(location).isString();
-    // check(lat).isLatLong();
-    // check(lng).isLatLong();
-    // check(website).isURL();
-    // check(intro).isString();
-    // check(pnum).isNumeric();
-    // check(email).isEmail();
-    // check(phone).isMobilePhone("any");
-    // check(created_by).isString();
-    // check(country).isString();
-
-    var errors = validationResult(request).formatWith(errorFormatter);
+    let errors = validationResult(request).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         response.render("admin", {
             infomsg: JSON.stringify(errors.array()),
@@ -227,7 +214,7 @@ check('m_country').isString().withMessage("Marker Country is not valid")] , (req
         pnum: pnum,
         lat: lat,
         lng: lng,
-        intro : intro,
+        intro: intro,
         country: country,
         address: location,
         email: email,
@@ -243,7 +230,7 @@ check('m_country').isString().withMessage("Marker Country is not valid")] , (req
             isadmin: request.session.issuper,
             infomsg: "Successfully Saved Marker"
         })
-    }).catch(function (err) {
+    }).catch((err) => {
         response.render("admin", {
             infomsg: "Failed to Save Marker",
             user: created_by,
@@ -255,102 +242,11 @@ check('m_country').isString().withMessage("Marker Country is not valid")] , (req
 
 });
 
-routes.post("/addmarker", [
-check('m_name').isString().withMessage("Marker Name is not valid"),
-check('m_tool').isString().withMessage("Product Name is not valid"),
-check('m_version').isString().withMessage("Product Version is not valid"),
-check('m_location').isString().withMessage("Marker Address is not valid"),
-check('m_lat').isNumeric().withMessage("Marker Latitude is not valid"),
-check('m_lng').isNumeric().withMessage("Marker Longitude is not valid"),
-check('m_intro').isString().withMessage("Marker Description is not valid"),
-check('m_pnum').isNumeric().withMessage("Marker Patients Number is not valid"),
-check('m_contactEmail').isEmail().withMessage("Marker Contact Email is not valid"),
-check('m_country').isString().withMessage("Marker Country is not valid")] , (request, response) => {
-
-    var data = request.body;
-    var name = data.m_name.trim();
-    var tool = data.m_tool.trim();
-    var version = data.m_version.trim();
-    var location = data.m_location.trim();
-    var country = data.m_country.trim();
-    var lat = data.m_lat.trim();
-    var lng = data.m_lng.trim();
-    var intro = data.m_intro.trim();
-    var pnum = data.m_pnum.trim();
-    var email = data.m_contactEmail.trim();
-    var website = data.m_website.trim();
-    var phone = data.m_contactPhone.trim();
-    var created_by = request.session.userid;
-    console.log(created_by);
-
-    // check(name).isString();
-    // check(tool).isString();
-    // check(version).isString();
-    // check(location).isString();
-    // check(lat).isLatLong();
-    // check(lng).isLatLong();
-    // check(website).isURL();
-    // check(intro).isString();
-    // check(pnum).isNumeric();
-    // check(email).isEmail();
-    // check(phone).isMobilePhone("any");
-    // check(created_by).isString();
-    // check(country).isString();
-
-    var errors = validationResult(request).formatWith(errorFormatter);
-    if (!errors.isEmpty()) {
-        response.render("admin", {
-            infomsg: JSON.stringify(errors.array()),
-            user: created_by,
-            errormsg: "",
-            isadmin: request.session.issuper
-        })
-        return;
-    }
-
-
-    Marker.create({
-        name: name,
-        product: tool,
-        version: version,
-        pnum: pnum,
-        lat: lat,
-        lng: lng,
-        intro : intro,
-        country: country,
-        address: location,
-        email: email,
-        phone: phone,
-        website: website,
-        isvisible: 1,
-        creator: created_by,
-
-    }).then(marker => {
-        response.render("admin", {
-            user: created_by,
-            errormsg: "",
-            isadmin: request.session.issuper,
-            infomsg: "Successfully Saved Marker"
-        })
-    }).catch(function (err) {
-        response.render("admin", {
-            infomsg: "Failed to Save Marker",
-            user: created_by,
-            errormsg: "",
-            isadmin: request.session.issuper
-        })
-    });
-
-
-});
-
-
-
-routes.post("/register", function (request, response) {
-    data = request.body;
-    email = data.n_email.trim();
-    rawpass = data.n_pass.trim();
-    matchpass = data.n_pass2.trim();
+routes.post("/register", (request, response) => {
+    let data = request.body;
+    let email = data.n_email.trim();
+    let rawpass = data.n_pass.trim();
+    let matchpass = data.n_pass2.trim();
 
     User.count({
             where: {
@@ -369,7 +265,7 @@ routes.post("/register", function (request, response) {
 
                 if (rawpass == matchpass) {
 
-                    bcrypt.hash(rawpass, saltRounds, function (err, hash) {
+                    bcrypt.hash(rawpass, saltRounds, (err, hash) => {
 
                         User.create({
                             email: email,
@@ -404,9 +300,9 @@ routes.post("/register", function (request, response) {
 
 
 routes.post('/login', (request, response) => {
-    var data = request.body;
-    var email = data.email.trim();
-    var pass = data.password.trim();
+    let data = request.body;
+    let email = data.email.trim();
+    let pass = data.password.trim();
 
     User.count({
             where: {
@@ -429,14 +325,22 @@ routes.post('/login', (request, response) => {
                         bcrypt.compare(pass, user.password, (err, resp) => {
                             console.log(resp);
                             if (resp) {
-                                var sess = request.session;
+                                let sess = request.session;
                                 sess.userid = email;
                                 console.log("logged in : " + email);
-                                request.session.save(function (err) {
+                                request.session.save((err) => {
                                     console.log("session saved");
-                                    let token = jwt.sign({ id: user.id, issuper : user.issuper }, JWT_SECRET , { expiresIn: 86400 });
+                                    let token = jwt.sign({
+                                        id: user.id,
+                                        issuper: user.issuper
+                                    }, JWT_SECRET, {
+                                        expiresIn: 86400
+                                    });
                                     console.log(token);
-                                    response.cookie("token" , token ,{maxAge :COOKIE_TIME , httpOnly: true })
+                                    response.cookie("token", token, {
+                                        maxAge: COOKIE_TIME,
+                                        httpOnly: true
+                                    })
                                     response.redirect("/admin");
                                     // response.setHeader('x-access-token', token);
                                     // response.status(200).send({ auth: true, token: token });
@@ -470,18 +374,31 @@ routes.post('/login', (request, response) => {
 });
 
 routes.get('/gettoken', (request, response) => {
-    var data = request.session;
-    var email = data.userid;
-    var issuper = data.issuper;
-    if (email){
-        User.findAll({where : {email : email}})
-        .spread(user =>{
-            let token = jwt.sign({ id: user.id, issuper : user.issuper }, JWT_SECRET , { expiresIn: 86400 });
-            response.status(200).json({token : token})
+    let data = request.session;
+    let email = data.userid;
+    let issuper = data.issuper;
+    if (email) {
+        User.findAll({
+                where: {
+                    email: email
+                }
+            })
+            .spread(user => {
+                let token = jwt.sign({
+                    id: user.id,
+                    issuper: user.issuper
+                }, JWT_SECRET, {
+                    expiresIn: 86400
+                });
+                response.status(200).json({
+                    token: token
+                })
+            })
+
+    } else {
+        response.status(200).json({
+            token: null
         })
-        
-    }else{
-        response.status(200).json({token : null})
     }
 
 

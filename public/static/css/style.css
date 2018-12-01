@@ -106,16 +106,16 @@ a.disabled {
 .m-title {
     font-family: 'Times New Roman', Times, serif;
     font-weight: 500;
-	font-size: 25px;
-	margin: 0;
-	padding: 0;
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
 }
 
 .m-tool {
     font-size: 15px;
     color: #666;
-	margin: -20px 0 0 0;
-	padding: 0;
+    margin: -20px 0 0 0;
+    padding: 0;
 }
 
 .m-intro {
