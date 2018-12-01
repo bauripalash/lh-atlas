@@ -28,23 +28,26 @@ require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-routes.get("*", (req, res , next) => {
-    var token = req.query.token || req.cookies.token || req.body.token  || req.headers['x-access-token'];
+routes.get("*", (req, res, next) => {
+    let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
     // console.log(req.cookies.token)
 
-    if (req.originalUrl == "/api/markers" || req.originalUrl == "/api/markers/" ) {
+    if (req.originalUrl == "/api/markers" || req.originalUrl == "/api/markers/") {
         // skip any /api routes
         next();
-    }else{
+    } else {
 
-    jwt.verify(token, JWT_SECRET, function(err, decoded) {
-		if (err) return res.status(401).send({auth : false, message: 'Unauthorised!'});
-		next();	
-    }); 
+        jwt.verify(token, JWT_SECRET, (err, decoded) => {
+            if (err) return res.status(401).send({
+                auth: false,
+                message: 'Unauthorised!'
+            });
+            next();
+        });
     }
 });
 
-routes.get('/markers/', function (req, res) {
+routes.get('/markers/', (req, res) => {
     Marker.findAll()
         .then(marker => {
             console.log("hello all product");
@@ -53,54 +56,54 @@ routes.get('/markers/', function (req, res) {
 
 });
 
-routes.get('/markers/product/:tool', function (req, res) {
-    var tool = req.params.tool;
+routes.get('/markers/product/:tool', (req, res) => {
+    let tool = req.params.tool;
     check(tool).isString();
-    var country = req.query.country;
+    let country = req.query.country;
     check(country).isString();
 
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
             errors: errors.array()
         });
         return;
     }
-    if (country){
+    if (country) {
         Marker.findAll({
-            where: {
-                product: tool,
-                country : country
-            }
-        })
-        .then(marker => {
-            console.log("hello product");
-            res.json(marker);
-        });
-    }else{
+                where: {
+                    product: tool,
+                    country: country
+                }
+            })
+            .then(marker => {
+                console.log("hello product");
+                res.json(marker);
+            });
+    } else {
         Marker.findAll({
-            where: {
-                product: tool
-            }
-        })
-        .then(marker => {
-            console.log("hello product");
-            res.json(marker);
-        });
+                where: {
+                    product: tool
+                }
+            })
+            .then(marker => {
+                console.log("hello product");
+                res.json(marker);
+            });
     }
-    
+
 
 });
 
-routes.get('/markers/product/:tool/:pnum', function (req, res) {
-    var tool = req.params.tool;
-    var pnum = req.params.pnum;
-    var country = req.query.country;
+routes.get('/markers/product/:tool/:pnum', (req, res) => {
+    let tool = req.params.tool;
+    let pnum = req.params.pnum;
+    let country = req.query.country;
     check(tool).isString();
-    // var ptotal = 0;
+    // let ptotal = 0;
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
             errors: errors.array()
@@ -108,21 +111,34 @@ routes.get('/markers/product/:tool/:pnum', function (req, res) {
         return;
     }
 
-    if (pnum == "pnum"){
-        if (country){
-            Marker.sum('pnum', { where: { product:  tool , country : country  }})
-        .then(sum => {
-            res.json({patients : sum});
-          })
-        }else{
-        Marker.sum('pnum', { where: { product:  tool  }})
-        .then(sum => {
-            res.json({patients : sum});
-          })
+    if (pnum == "pnum") {
+        if (country) {
+            Marker.sum('pnum', {
+                    where: {
+                        product: tool,
+                        country: country
+                    }
+                })
+                .then(sum => {
+                    res.json({
+                        patients: sum
+                    });
+                })
+        } else {
+            Marker.sum('pnum', {
+                    where: {
+                        product: tool
+                    }
+                })
+                .then(sum => {
+                    res.json({
+                        patients: sum
+                    });
+                })
         }
 
 
-    }else{
+    } else {
         res.redirect("/markers/product/" + tool)
     }
 
@@ -130,46 +146,52 @@ routes.get('/markers/product/:tool/:pnum', function (req, res) {
 });
 
 
-routes.get('/markers/country/:country/:pnum', function (req, res) {
-    var country = req.params.country;
-    var pnum = req.params.pnum;
+routes.get('/markers/country/:country/:pnum', (req, res) => {
+    let country = req.params.country;
+    let pnum = req.params.pnum;
     check(country).isString();
 
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
             errors: errors.array()
         });
         return;
     }
-    if (pnum == "pnum"){
-        Marker.sum('pnum', { where: { country:  country  }})
-        .then(sum => {
-            res.json({patients : sum});
-          })
+    if (pnum == "pnum") {
+        Marker.sum('pnum', {
+                where: {
+                    country: country
+                }
+            })
+            .then(sum => {
+                res.json({
+                    patients: sum
+                });
+            })
 
 
-    }else{
+    } else {
         res.redirect("/markers/country/" + country)
     }
 
 });
 
 
-routes.get('/markers/country/:country/', function (req, res) {
-    var country = req.params.country;
+routes.get('/markers/country/:country/', (req, res) => {
+    let country = req.params.country;
     check(country).isString();
 
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
             errors: errors.array()
         });
         return;
     }
-    
+
     Marker.findAll({
             where: {
                 country: country
@@ -182,15 +204,15 @@ routes.get('/markers/country/:country/', function (req, res) {
 
 });
 
-routes.get('/markers/creator/:em', check('em').isEmail() ,function (req, res) {
-    var email = req.params.em;
+routes.get('/markers/creator/:em', check('em').isEmail(), (req, res) => {
+    let email = req.params.em;
     // check(email).isEmail();
 
 
-    var errors = validationResult(req).formatWith(errorFormatter);
+    let errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         res.status(400).send({
-            error : "Invalid Email"
+            error: "Invalid Email"
         });
         return;
     }
@@ -206,60 +228,60 @@ routes.get('/markers/creator/:em', check('em').isEmail() ,function (req, res) {
 
 });
 
-routes.get("/nonadmins", function (req, res) {
-    var token = req.query.token || req.cookies.token || req.body.token  || req.headers['x-access-token'];
+routes.get("/nonadmins", (req, res) => {
+    let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
     // console.log(req.cookies.token)
     // jwt.verify(token, JWT_SECRET, function (err, decoded) {
     //     if (err){ return res.status(401).send({
     //         auth: false,
     //         message: 'Unauthorised!'
     //     });}else{
-            User.findAll({
-                where: {
-                    issuper: 0 || null
-                }
-            })
-            .then(user => {
-                res.json(user)
-            });
+    User.findAll({
+            where: {
+                issuper: 0 || null
+            }
+        })
+        .then(user => {
+            res.json(user)
+        });
     //     }
     // });
 
-   
+
 
 });
 
-routes.get("/admins", function (req, res) {
-    var token = req.query.token || req.cookies.token || req.body.token  || req.headers['x-access-token'];
-    
+routes.get("/admins", (req, res) => {
+    let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
+
     // jwt.verify(token, JWT_SECRET, function (err, decoded) {
     //     if (err){ return res.status(401).send({
     //         auth: false,
     //         message: err
     //     });}else{
-            User.findAll({
-                where: {
-                    issuper: 1
-                }
-            })
-            .then(user => {
-                res.json(user)
-            });
+    User.findAll({
+            where: {
+                issuper: 1
+            }
+        })
+        .then(user => {
+            res.json(user)
+        });
     //     }
     // });
 
-    
+
 });
 
 routes.get("/allusers", (req, res) => {
-    var token = req.query.token || req.cookies.token || req.body.token  || req.headers['x-access-token'];
+    let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
     // console.log(req.cookies.token)
     // jwt.verify(token, JWT_SECRET, function (err, decoded) {
     //     if (err){ return res.status(401).send({
     //         auth: false,
     //         message: 'Unauthorised!'
     //     });}else{
-            User.findAll()
+    User.findAll()
         .then(user => {
             res.json(user);
         });
@@ -273,7 +295,7 @@ routes.get("/allusers", (req, res) => {
     //     // }))
     //     console.log(user.id , user.issuper);
     // });
-    
+
 });
 
 module.exports = routes;
