@@ -81,7 +81,7 @@ routes.get('/', (request, response) => {
 });
 
 routes.post("/makeadmin", (req, res) => {
-    let email = req.params.ue;
+    let email = req.body.ue;
     check(email).isEmail();
 
 
@@ -92,27 +92,20 @@ routes.post("/makeadmin", (req, res) => {
         });
         return;
     }
-    let UPDATE = {
-        isuper: 1
-    };
-
-    User.update(UPDATE, {
-            where: {
-                email: email
-            }
-        })
+    let updateValues = { issuper : 1 };
+    User.update(updateValues , { where: {email: email}})
         .then(user => {
             res.render("admin", {
                 infomsg: "Selected User Upgraded to SuperUser",
-                user: request.session.userid,
-                isadmin: request.session.issuper,
+                user: req.session.userid,
+                isadmin: req.session.issuper,
                 errormsg: "",
             });
         }).catch(function (err) {
             res.render("admin", {
                 infomsg: "Failed to Upgrade Selected User to SuperUser , Contact Tech Support!",
-                user: request.session.userid,
-                isadmin: request.session.issuper,
+                user: req.session.userid,
+                isadmin: req.session.issuper,
                 errormsg: "",
             });
         });
@@ -336,7 +329,7 @@ routes.post('/login', (request, response) => {
                                     }, JWT_SECRET, {
                                         expiresIn: 86400
                                     });
-                                    console.log(token);
+                                    // console.log(token);
                                     response.cookie("token", token, {
                                         maxAge: COOKIE_TIME,
                                         httpOnly: true
