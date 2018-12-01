@@ -235,6 +235,169 @@ routes.post("/addmarker", [
 
 });
 
+routes.get("/editmarker/:id" , (request , response) =>{
+    
+    let marker_id = parseInt(request.params.id);
+    let user = request.session.userid;
+    let issuper = request.session.issuper;
+    // marker_id = marker_id.toInteger();
+    // console.log(typeof marker_id)
+    // request.checkBody(marker_id).isNumeric().withMessage("Marker Id is not valid")
+
+    // let errors = validationResult(request).formatWith(errorFormatter);
+    if (user){
+    if (!Number.isInteger(marker_id)) {
+        response.render("admin", {
+            infomsg: "Invalid Id",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+        return;
+    }
+
+
+    Marker.findAll({where : {id : marker_id , creator : user}})
+    .then((marker)=>{
+        console.log(marker)
+        if (JSON.stringify(marker) != "[]" || issuper ){
+            Marker.findAll({where:{id :marker_id}})
+            .spread((marker) =>{
+                // console.log(marker)
+                response.render("editmarker", {
+                    infomsg: "",
+                    user: user,
+                    tool : marker.product,
+                    isadmin:issuper,
+                    name : marker.name,
+                    pnum : marker.pnum,
+                    version : marker.version,
+                    location : marker.address,
+                    country : marker.country,
+                    lat : marker.lat,
+                    lng : marker.lng,
+                    intro : marker.intro,
+                    email : marker.email,
+                    website  : marker.website,
+                    phone : marker.phone,
+                    mid : marker.id
+
+                })
+            })
+            .catch((err) =>{
+                response.render("admin", {
+                    infomsg: "No Marker Found With This Id",
+                    user: user,
+                    errormsg: "",
+                    isadmin: request.session.issuper
+                })
+            })
+
+        }else{
+            response.render("admin", {
+                infomsg: "You have no permission to edit other's marker",
+                user: user,
+                errormsg: "",
+                isadmin: request.session.issuper
+            })
+        }
+    })
+    .catch((err) =>{
+        response.render("admin", {
+            infomsg: err,
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    })
+    }else{
+        response.render("admin", {
+            infomsg: "Please Login",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    }
+
+    
+});
+
+routes.post("/editmarker", [
+    check('m_name').isString().withMessage("Marker Name is not valid"),
+    check('m_tool').isString().withMessage("Product Name is not valid"),
+    check('m_version').isString().withMessage("Product Version is not valid"),
+    check('m_location').isString().withMessage("Marker Address is not valid"),
+    check('m_intro').isString().withMessage("Marker Description is not valid"),
+    check('m_contactEmail').isEmail().withMessage("Marker Contact Email is not valid"),
+    check('m_country').isString().withMessage("Marker Country is not valid")
+], (request, response) => {
+
+    let data = request.body;
+    let name = data.m_name.trim();
+    let tool = data.m_tool.trim();
+    let version = data.m_version.trim();
+    let location = data.m_location.trim();
+    let country = data.m_country.trim();
+    let lat = data.m_lat.trim();
+    let lng = data.m_lng.trim();
+    let intro = data.m_intro.trim();
+    let pnum = data.m_pnum.trim();
+    let email = data.m_contactEmail.trim();
+    let website = data.m_website.trim();
+    let phone = data.m_contactPhone.trim();
+    let created_by = request.session.userid;
+    let marker_id = data.marker_id;
+
+    console.log(created_by);
+
+    let errors = validationResult(request).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        response.render("admin", {
+            infomsg: JSON.stringify(errors.array()),
+            user: created_by,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+        return;
+    }
+
+    let updateValues = {
+        name: name,
+        product: tool,
+        version: version,
+        pnum: pnum,
+        lat: lat,
+        lng: lng,
+        intro: intro,
+        country: country,
+        address: location,
+        email: email,
+        phone: phone,
+        website: website,
+        isvisible: 1,
+        creator: created_by,
+
+    };
+
+    Marker.update(updateValues , {where : {id : marker_id}}).then(marker => {
+        response.render("admin", {
+            user: created_by,
+            errormsg: "",
+            isadmin: request.session.issuper,
+            infomsg: "Successfully Updated Marker"
+        })
+    }).catch((err) => {
+        response.render("admin", {
+            infomsg: "Failed to Update Marker",
+            user: created_by,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    });
+
+
+});
+
 routes.post("/register", (request, response) => {
     let data = request.body;
     let email = data.n_email.trim();

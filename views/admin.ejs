@@ -479,16 +479,17 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Marker</h4>
+                    <h4 class="modal-title">Edit / Delete Marker</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-group" action="/admin/del" method="POST">
-                        <label for="mid">Name of Marker : </label>
-                        <select class="form-control select" name="mid" id="mid"></select>
-                        <br>
-                        <input class="btn btn-danger" type="submit" value="Delete">
+                    <label for="mid">Name of Marker : </label>
+                    <select class="form-control select" name="dmid" id="dmid"></select>
+                    <br>
+                    <input class="form-control btn btn-danger" onclick="del_marker()" value="Delete">
+                    <br><br>
+                    <input class="form-control btn btn-warning" onclick="edit_marker()" value="Edit">
 
-                    </form>
+                    <!--  -->
 
                 </div>
                 <div class="modal-footer">
@@ -560,7 +561,7 @@
 
 
                 <br>
-                <div style="margin-left: 15px;" class="">
+                <div style="margin-left: 10px;" class="">
                     <div style="padding-top : 5px;" class="btn-toolbar inline-block" role="toolbar" aria-label="Toolbar with button groups">
                         <div style="padding-top : 5px;" class="btn-group mr-4" class="btn-group mr-4" role="group"
                             aria-label="First group">
@@ -574,7 +575,7 @@
 
                         </div>
                         <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="second group">
-                            <button id="del-m-btn" class="btn btn-danger" data-toggle="modal" data-target="#del-m">Delete
+                            <button id="del-m-btn" class="btn btn-danger" data-toggle="modal" data-target="#del-m">Manage
                                 Marker</button>
 
                         </div>
@@ -643,6 +644,8 @@
             // }
         });
 
+        
+
         // document.getElementById("ex-c").onchange(function(value){
         //     document.getElementById("country-export-btn").value = "/api/markers/country/" + value;
         // })
@@ -672,6 +675,20 @@
                 },
                 function (data, status) {});
         }
+        function del_marker() {
+            var v = document.getElementById("dmid").value;
+            $.post("/admin/del", {
+                    mid: v,
+                },
+                function (data, status) {
+                    // alert("Deleted Selected Marker");
+                });
+        }
+
+        function edit_marker() {
+            var v = document.getElementById("dmid").value;
+            window.location = "/admin/editmarker/" + v;
+        }
     </script>
 
     <% } %>
@@ -684,7 +701,7 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#mid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
                         value.id));
                     // console.log(value.name);
                 });
@@ -699,7 +716,7 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#mid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
                         value.id));
                     // console.log(value.name);
                 });
