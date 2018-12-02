@@ -24,7 +24,9 @@
         <div class="container pr-0">
             <a class="navbar-brand" href="/">
                 <!-- <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528" alt="logo">  -->
-                <b style="color:white;">LH Atlas Admin</b>
+                <b style="color:white;">LH Atlas
+                    <% if (isadmin) {%> Admin
+                    <% }%> </b>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,6 +88,9 @@
                                 target="_blank">CC
                                 3.0 BY</a></div>
                         <div>
+                            GeoCoding by <a href="https://wiki.openstreetmap.org/wiki/Nominatim"> OpenStreetMap Nominatim</a>
+                        </div>
+                        <div>
                             All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
                         </div>
                     </small>
@@ -97,7 +102,7 @@
         </div>
     </div>
     <div class="modal fade" id="newmarkermodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">New Marker</h4>
@@ -374,12 +379,16 @@
                         <input class="form-control" type="email" placeholder="Email" id="m_contactEmail" required name="m_contactEmail"><br>
                         <input class="form-control" type="tel" placeholder="Phone" id="m_contactPhone" name="m_contactPhone"><br>
                         <input class="form-control" type="url" placeholder="Website" id="m_website" name="m_website"><br>
-                        <input class="form-control" type="text" placeholder="Latitude" required id="m_lat" required
-                            name="m_lat"><br>
-                        <input class="form-control" type="text" placeholder="Longitude" required id="m_lng" required
-                            name="m_lng"><br>
+
                         <input class="form-control" type="text" placeholder="Introduction" required id="m_intro"
                             required name="m_intro"><br>
+                        <!-- <input type="checkbox" id="manual_ll">&nbspAdd Latitude/Longitude Manualy -->
+                        <input class="form-control" type="text" placeholder="Latitude" required id="m_lat"
+                            required name="m_lat"><br>
+                        <input class="form-control" type="text" placeholder="Longitude" required id="m_lng"
+                            required name="m_lng"><br>
+                        <small class="form-label" style="color: gray">Values of Latitude/Longitude Are Automaticaly Taken from Address. Edit Them If Needed</small>
+                        <br><br>
 
                         <input id="submit" class="btn btn-primary" type="submit" value="Add Marker">
                     </form>
@@ -644,7 +653,7 @@
             // }
         });
 
-        
+
 
         // document.getElementById("ex-c").onchange(function(value){
         //     document.getElementById("country-export-btn").value = "/api/markers/country/" + value;
@@ -668,6 +677,13 @@
         });
 
 
+        function fetchJSON(url) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", url, false);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+
         function makeadmin() {
             ue = document.getElementById("nonadmin").value;
             $.post("/admin/makeadmin", {
@@ -675,6 +691,7 @@
                 },
                 function (data, status) {});
         }
+
         function del_marker() {
             var v = document.getElementById("dmid").value;
             $.post("/admin/del", {
@@ -689,6 +706,52 @@
             var v = document.getElementById("dmid").value;
             window.location = "/admin/editmarker/" + v;
         }
+        
+        document.getElementById("m_location").onfocusout = function () {
+            var m_location = document.getElementById("m_location").value;
+            var geojson = JSON.parse(fetchJSON("https://nominatim.openstreetmap.org/search/?q=" + m_location +"&format=json"));
+            console.log(geojson[0].lat)
+            document.getElementById("m_lat").value = geojson[0].lat;
+            document.getElementById("m_lng").value = geojson[0].lon;
+        }
+
+
+        // function add_marker() {
+        //     var m_name = document.getElementById("m_name").value;
+        //     var m_version = document.getElementById("m_version").value;
+        //     var m_pnum = document.getElementById("m_pnum").value;
+        //     var m_location = document.getElementById("m_location").value;
+        //     var m_country = document.getElementById("m_country").value;
+        //     var m_contactEmail = document.getElementById("m_contactEmail").value;
+        //     var m_contactPhone = document.getElementById("m_contactPhone").value;
+        //     var m_website = document.getElementById("m_website").value;
+        //     var m_intro = document.getElementById("m_intro").value;
+        //     var m_lat = document.getElementById("m_lat").value;
+        //     var m_lng = document.getElementById("m_lng").value;
+
+        //     $.post("/admin/addmarker", {
+        //             m_name: m_name,
+        //             m_version : m_version.trim(),
+        //             m_pnum : m_pnum.trim(),
+        //             m_location : m_location.trim(),
+        //             m_country: m_country,
+        //             m_contactEmail : m_contactEmail.trim(),
+        //             m_contactPhone : m_contactPhone.trim(),
+        //             m_intro : m_intro.trim(),
+        //             m_website : m_website.trim(),
+        //             m_lat : m_lng.trim(),
+        //             m_lng : m_lng.trim()
+        //         },
+        //         function (data, status) {
+        //             alert("Successfully Saved Marker");
+        //             console.log(data , status)
+        //         });
+            
+            
+
+
+
+        // }
     </script>
 
     <% } %>
@@ -701,7 +764,8 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr(
+                        'value',
                         value.id));
                     // console.log(value.name);
                 });
@@ -716,7 +780,8 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr(
+                        'value',
                         value.id));
                     // console.log(value.name);
                 });

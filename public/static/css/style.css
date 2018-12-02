@@ -44,12 +44,14 @@ a.disabled {
 
     position: absolute;
     z-index: 999;
-    right: 5%;
+    /* margin-right: 5px; */
+    right:0%;
     top: 25%;
-    max-width: 140px;
+    max-width: 145px;
     background: #ffffff;
     opacity: 0.7;
-    border-radius: 5%;
+    border: 1px solid gray;
+    border-radius: 5px;
 }
 
 /* .ibox {

@@ -196,6 +196,7 @@ routes.post("/addmarker", [
             errormsg: "",
             isadmin: request.session.issuper
         })
+        // response.json({msg : errors.array()})
         return;
     }
 
@@ -223,7 +224,9 @@ routes.post("/addmarker", [
             isadmin: request.session.issuper,
             infomsg: "Successfully Saved Marker"
         })
+        // response.json({msg : "success"})
     }).catch((err) => {
+        // response.json({msg : "fail"})
         response.render("admin", {
             infomsg: "Failed to Save Marker",
             user: created_by,
@@ -235,6 +238,17 @@ routes.post("/addmarker", [
 
 });
 
+routes.get("/editmarker/" , (request , response) =>{
+    let user = request.session.userid;
+    let issuper = request.session.issuper;
+    response.render("admin", {
+        infomsg: "No Marker Found!",
+        user: user,
+        errormsg: "",
+        isadmin: request.session.issuper
+    })
+})
+
 routes.get("/editmarker/:id" , (request , response) =>{
     
     let marker_id = parseInt(request.params.id);
@@ -245,6 +259,7 @@ routes.get("/editmarker/:id" , (request , response) =>{
     // request.checkBody(marker_id).isNumeric().withMessage("Marker Id is not valid")
 
     // let errors = validationResult(request).formatWith(errorFormatter);
+    // if (Number.isInteger(marker_id)){
     if (user){
     if (!Number.isInteger(marker_id)) {
         response.render("admin", {
@@ -318,6 +333,14 @@ routes.get("/editmarker/:id" , (request , response) =>{
             isadmin: request.session.issuper
         })
     }
+    // }else{
+    //     response.render("admin", {
+    //         infomsg: "You Don't Have Any Marker!",
+    //         user: user,
+    //         errormsg: "",
+    //         isadmin: request.session.issuper
+    //     })
+    // }
 
     
 });
