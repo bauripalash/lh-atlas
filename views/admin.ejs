@@ -18,591 +18,816 @@
 
 
 <body>
+    <% if (user){ %>
+    <style>
+        #sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #272c33;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #a56426;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+    text-decoration:none;
+    color: whitesmoke;
+}
+#sidebar ul li a:hover {
+    color: #a56426;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #a56426;
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+
+#content {
+    width: calc(100% - 250px);
+    /* padding: 40px; */
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#content.active {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+    }
+    #content.active {
+        width: calc(100% - 250px);
+    }
+    /* #sidebarCollapse span {
+        display: none;
+    } */
+}    
+        </style>
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Dashboard</h3>
+            </h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <!-- <p>Dummy Heading</p> -->
+            <li class="active">
+                <a href="#menu">Panel</a>
+            </li>
+            <li>
+                <a data-toggle="modal" data-target="#newmarkermodal" href="#">New Marker</a>
+
+            </li>
+            <li>
+                <a href="/admin/managemarkers">Manage Markers</a>
+            </li>
+            <% if (isadmin){ %>
+            <li>
+                <a href="/admin/manageusers">Manage Users</a>
+            </li>
+            <% } %>
+            <li>
+                <a data-toggle="modal" data-target="#export-json" href="#">Export JSON</a>
+            </li>
+
+            <!-- <li>
+                <a href="#">Get Access Token</a>
+            </li> -->
+
+
+        </ul>
+
+
+    </nav>
+    <% } %>
 
     <!--Top navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light nav-down">
-        <div class="container pr-0">
-            <a class="navbar-brand" href="/">
-                <!-- <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528" alt="logo">  -->
-                <b style="color:white;">LH Atlas Admin</b>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar-togg">
-                <ul class="navbar-nav ml-auto">
-                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal" data-target="#helpmodal">
-                            <i class="fa fa-question-circle"></i> About</a></li>
-                    <!-- <li class="nav-item navicon">|</li> -->
-                    <!-- <li id="login-btn" class="nav-item navicon">
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light nav-down">
+            <div class="container pr-0">
+                <% if (user) { %>
+                <a href="#" type="button" id="sidebarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                    <!-- <span>Toggle Sidebar</span> -->
+                </a>
+                <% } %>
+                <a class="navbar-brand" style="margin-left: 5px !important;" href="/">
+
+                    <!-- <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528" alt="logo">  -->
+                    <% if (user) { %>
+                    <b style="color:white;"> LH Atlas </b>
+                    <% } else { %>
+                    <b style="color:white;"> Atlas Dashboard </b>
+                    <% } %>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar-togg">
+                    <ul class="navbar-nav ml-auto">
+                        <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal" data-target="#helpmodal">
+                                <i class="fa fa-question-circle"></i> About</a></li>
+                        <!-- <li class="nav-item navicon">|</li> -->
+                        <!-- <li id="login-btn" class="nav-item navicon">
                                 <a class="nav-link" href="/admin">Login</a>
         
                             </li> -->
-                    <!-- <li id="reg-btn" class="nav-item naviconr"><a style="color: white;" class="nav-link" href="/admin/register">Register</a></li> -->
-                    <% if (!user){ %>
-                    <li id="reg-btn" class="nav-item naviconr"> <a style="color: white;" class="nav-link" href="/register"><i
-                                class="fa fa-sign-in"></i> Register</a></li>
-                    <!-- <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">Admin</a></li> -->
-                    <% } %>
-
-                    <% if (user){ %>
-                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">
-                            <i class="fa fa-sign-out"></i> Logout</a></li>
-                    <% } %>
-
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <% if (infomsg){ %>
-    <p style="color: steelblue ; background: silver" class="text-center">
-        <%- infomsg %>
-    </p>
-    <% } %>
-
-    <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">About</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
-                        and Radiology. This will be useful for new users to find fellow user and also request help and
-                        support in from them their locality.
-                    </div>
-                    <br>
-                    <small>
-                        <div>Special Thanks To ,</div>
-
-                        <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
-                            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
-                            by
-                            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
-                                target="_blank">CC
-                                3.0 BY</a></div>
-                        <div>
-                            All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
-                        </div>
-                    </small>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="newmarkermodal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Marker</h4>
-                </div>
-                <div class="modal-body">
-                    <!-- <input type="text" placeholder="Type" id="m_type"><br> -->
-                    <form action="/admin/addmarker" method="POST">
-                        <select required class="form-control" required name="m_tool" id="m_type">
-                            <option value="ehr">LibreHealth EHR</option>
-                            <option value="toolkit">LibreHealth Toolkit</option>
-                            <option value="radiology">LibreHealth Radiology</option>
-                        </select>
-                        <br><br>
-                        <input class="form-control" required type="text" placeholder="Version" name="m_version"
-                            required id="m_version"><br>
-                        <input class="form-control" required type="text" placeholder="Name" required name="m_name" id="m_name"><br>
-                        <input class="form-control" required type="text" placeholder="Patients" required id="m_pnum"
-                            name="m_pnum"><br>
-                        <input class="form-control" required type="text" placeholder="Address" required id="m_location"
-                            name="m_location"><br>
-                        <select class="form-control" required type="country" required id="m_country" name="m_country">
-                            <option value="IN">India</option>
-                            <option value="AF">Afghanistan</option>
-                            <option value="AX">Åland Islands</option>
-                            <option value="AL">Albania</option>
-                            <option value="DZ">Algeria</option>
-                            <option value="AS">American Samoa</option>
-                            <option value="AD">Andorra</option>
-                            <option value="AO">Angola</option>
-                            <option value="AI">Anguilla</option>
-                            <option value="AQ">Antarctica</option>
-                            <option value="AG">Antigua and Barbuda</option>
-                            <option value="AR">Argentina</option>
-                            <option value="AM">Armenia</option>
-                            <option value="AW">Aruba</option>
-                            <option value="AU">Australia</option>
-                            <option value="AT">Austria</option>
-                            <option value="AZ">Azerbaijan</option>
-                            <option value="BS">Bahamas</option>
-                            <option value="BH">Bahrain</option>
-                            <option value="BD">Bangladesh</option>
-                            <option value="BB">Barbados</option>
-                            <option value="BY">Belarus</option>
-                            <option value="BE">Belgium</option>
-                            <option value="BZ">Belize</option>
-                            <option value="BJ">Benin</option>
-                            <option value="BM">Bermuda</option>
-                            <option value="BT">Bhutan</option>
-                            <option value="BO">Bolivia, Plurinational State of</option>
-                            <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
-                            <option value="BA">Bosnia and Herzegovina</option>
-                            <option value="BW">Botswana</option>
-                            <option value="BV">Bouvet Island</option>
-                            <option value="BR">Brazil</option>
-                            <option value="IO">British Indian Ocean Territory</option>
-                            <option value="BN">Brunei Darussalam</option>
-                            <option value="BG">Bulgaria</option>
-                            <option value="BF">Burkina Faso</option>
-                            <option value="BI">Burundi</option>
-                            <option value="KH">Cambodia</option>
-                            <option value="CM">Cameroon</option>
-                            <option value="CA">Canada</option>
-                            <option value="CV">Cape Verde</option>
-                            <option value="KY">Cayman Islands</option>
-                            <option value="CF">Central African Republic</option>
-                            <option value="TD">Chad</option>
-                            <option value="CL">Chile</option>
-                            <option value="CN">China</option>
-                            <option value="CX">Christmas Island</option>
-                            <option value="CC">Cocos (Keeling) Islands</option>
-                            <option value="CO">Colombia</option>
-                            <option value="KM">Comoros</option>
-                            <option value="CG">Congo</option>
-                            <option value="CD">Congo, the Democratic Republic of the</option>
-                            <option value="CK">Cook Islands</option>
-                            <option value="CR">Costa Rica</option>
-                            <option value="CI">Côte d'Ivoire</option>
-                            <option value="HR">Croatia</option>
-                            <option value="CU">Cuba</option>
-                            <option value="CW">Curaçao</option>
-                            <option value="CY">Cyprus</option>
-                            <option value="CZ">Czech Republic</option>
-                            <option value="DK">Denmark</option>
-                            <option value="DJ">Djibouti</option>
-                            <option value="DM">Dominica</option>
-                            <option value="DO">Dominican Republic</option>
-                            <option value="EC">Ecuador</option>
-                            <option value="EG">Egypt</option>
-                            <option value="SV">El Salvador</option>
-                            <option value="GQ">Equatorial Guinea</option>
-                            <option value="ER">Eritrea</option>
-                            <option value="EE">Estonia</option>
-                            <option value="ET">Ethiopia</option>
-                            <option value="FK">Falkland Islands (Malvinas)</option>
-                            <option value="FO">Faroe Islands</option>
-                            <option value="FJ">Fiji</option>
-                            <option value="FI">Finland</option>
-                            <option value="FR">France</option>
-                            <option value="GF">French Guiana</option>
-                            <option value="PF">French Polynesia</option>
-                            <option value="TF">French Southern Territories</option>
-                            <option value="GA">Gabon</option>
-                            <option value="GM">Gambia</option>
-                            <option value="GE">Georgia</option>
-                            <option value="DE">Germany</option>
-                            <option value="GH">Ghana</option>
-                            <option value="GI">Gibraltar</option>
-                            <option value="GR">Greece</option>
-                            <option value="GL">Greenland</option>
-                            <option value="GD">Grenada</option>
-                            <option value="GP">Guadeloupe</option>
-                            <option value="GU">Guam</option>
-                            <option value="GT">Guatemala</option>
-                            <option value="GG">Guernsey</option>
-                            <option value="GN">Guinea</option>
-                            <option value="GW">Guinea-Bissau</option>
-                            <option value="GY">Guyana</option>
-                            <option value="HT">Haiti</option>
-                            <option value="HM">Heard Island and McDonald Islands</option>
-                            <option value="VA">Holy See (Vatican City State)</option>
-                            <option value="HN">Honduras</option>
-                            <option value="HK">Hong Kong</option>
-                            <option value="HU">Hungary</option>
-                            <option value="IS">Iceland</option>
-                            <option value="IN">India</option>
-                            <option value="ID">Indonesia</option>
-                            <option value="IR">Iran, Islamic Republic of</option>
-                            <option value="IQ">Iraq</option>
-                            <option value="IE">Ireland</option>
-                            <option value="IM">Isle of Man</option>
-                            <option value="IL">Israel</option>
-                            <option value="IT">Italy</option>
-                            <option value="JM">Jamaica</option>
-                            <option value="JP">Japan</option>
-                            <option value="JE">Jersey</option>
-                            <option value="JO">Jordan</option>
-                            <option value="KZ">Kazakhstan</option>
-                            <option value="KE">Kenya</option>
-                            <option value="KI">Kiribati</option>
-                            <option value="KP">Korea, Democratic People's Republic of</option>
-                            <option value="KR">Korea, Republic of</option>
-                            <option value="KW">Kuwait</option>
-                            <option value="KG">Kyrgyzstan</option>
-                            <option value="LA">Lao People's Democratic Republic</option>
-                            <option value="LV">Latvia</option>
-                            <option value="LB">Lebanon</option>
-                            <option value="LS">Lesotho</option>
-                            <option value="LR">Liberia</option>
-                            <option value="LY">Libya</option>
-                            <option value="LI">Liechtenstein</option>
-                            <option value="LT">Lithuania</option>
-                            <option value="LU">Luxembourg</option>
-                            <option value="MO">Macao</option>
-                            <option value="MK">Macedonia, the former Yugoslav Republic of</option>
-                            <option value="MG">Madagascar</option>
-                            <option value="MW">Malawi</option>
-                            <option value="MY">Malaysia</option>
-                            <option value="MV">Maldives</option>
-                            <option value="ML">Mali</option>
-                            <option value="MT">Malta</option>
-                            <option value="MH">Marshall Islands</option>
-                            <option value="MQ">Martinique</option>
-                            <option value="MR">Mauritania</option>
-                            <option value="MU">Mauritius</option>
-                            <option value="YT">Mayotte</option>
-                            <option value="MX">Mexico</option>
-                            <option value="FM">Micronesia, Federated States of</option>
-                            <option value="MD">Moldova, Republic of</option>
-                            <option value="MC">Monaco</option>
-                            <option value="MN">Mongolia</option>
-                            <option value="ME">Montenegro</option>
-                            <option value="MS">Montserrat</option>
-                            <option value="MA">Morocco</option>
-                            <option value="MZ">Mozambique</option>
-                            <option value="MM">Myanmar</option>
-                            <option value="NA">Namibia</option>
-                            <option value="NR">Nauru</option>
-                            <option value="NP">Nepal</option>
-                            <option value="NL">Netherlands</option>
-                            <option value="NC">New Caledonia</option>
-                            <option value="NZ">New Zealand</option>
-                            <option value="NI">Nicaragua</option>
-                            <option value="NE">Niger</option>
-                            <option value="NG">Nigeria</option>
-                            <option value="NU">Niue</option>
-                            <option value="NF">Norfolk Island</option>
-                            <option value="MP">Northern Mariana Islands</option>
-                            <option value="NO">Norway</option>
-                            <option value="OM">Oman</option>
-                            <option value="PK">Pakistan</option>
-                            <option value="PW">Palau</option>
-                            <option value="PS">Palestinian Territory, Occupied</option>
-                            <option value="PA">Panama</option>
-                            <option value="PG">Papua New Guinea</option>
-                            <option value="PY">Paraguay</option>
-                            <option value="PE">Peru</option>
-                            <option value="PH">Philippines</option>
-                            <option value="PN">Pitcairn</option>
-                            <option value="PL">Poland</option>
-                            <option value="PT">Portugal</option>
-                            <option value="PR">Puerto Rico</option>
-                            <option value="QA">Qatar</option>
-                            <option value="RE">Réunion</option>
-                            <option value="RO">Romania</option>
-                            <option value="RU">Russian Federation</option>
-                            <option value="RW">Rwanda</option>
-                            <option value="BL">Saint Barthélemy</option>
-                            <option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
-                            <option value="KN">Saint Kitts and Nevis</option>
-                            <option value="LC">Saint Lucia</option>
-                            <option value="MF">Saint Martin (French part)</option>
-                            <option value="PM">Saint Pierre and Miquelon</option>
-                            <option value="VC">Saint Vincent and the Grenadines</option>
-                            <option value="WS">Samoa</option>
-                            <option value="SM">San Marino</option>
-                            <option value="ST">Sao Tome and Principe</option>
-                            <option value="SA">Saudi Arabia</option>
-                            <option value="SN">Senegal</option>
-                            <option value="RS">Serbia</option>
-                            <option value="SC">Seychelles</option>
-                            <option value="SL">Sierra Leone</option>
-                            <option value="SG">Singapore</option>
-                            <option value="SX">Sint Maarten (Dutch part)</option>
-                            <option value="SK">Slovakia</option>
-                            <option value="SI">Slovenia</option>
-                            <option value="SB">Solomon Islands</option>
-                            <option value="SO">Somalia</option>
-                            <option value="ZA">South Africa</option>
-                            <option value="GS">South Georgia and the South Sandwich Islands</option>
-                            <option value="SS">South Sudan</option>
-                            <option value="ES">Spain</option>
-                            <option value="LK">Sri Lanka</option>
-                            <option value="SD">Sudan</option>
-                            <option value="SR">Suriname</option>
-                            <option value="SJ">Svalbard and Jan Mayen</option>
-                            <option value="SZ">Swaziland</option>
-                            <option value="SE">Sweden</option>
-                            <option value="CH">Switzerland</option>
-                            <option value="SY">Syrian Arab Republic</option>
-                            <option value="TW">Taiwan, Province of China</option>
-                            <option value="TJ">Tajikistan</option>
-                            <option value="TZ">Tanzania, United Republic of</option>
-                            <option value="TH">Thailand</option>
-                            <option value="TL">Timor-Leste</option>
-                            <option value="TG">Togo</option>
-                            <option value="TK">Tokelau</option>
-                            <option value="TO">Tonga</option>
-                            <option value="TT">Trinidad and Tobago</option>
-                            <option value="TN">Tunisia</option>
-                            <option value="TR">Turkey</option>
-                            <option value="TM">Turkmenistan</option>
-                            <option value="TC">Turks and Caicos Islands</option>
-                            <option value="TV">Tuvalu</option>
-                            <option value="UG">Uganda</option>
-                            <option value="UA">Ukraine</option>
-                            <option value="AE">United Arab Emirates</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="US">United States</option>
-                            <option value="UM">United States Minor Outlying Islands</option>
-                            <option value="UY">Uruguay</option>
-                            <option value="UZ">Uzbekistan</option>
-                            <option value="VU">Vanuatu</option>
-                            <option value="VE">Venezuela, Bolivarian Republic of</option>
-                            <option value="VN">Viet Nam</option>
-                            <option value="VG">Virgin Islands, British</option>
-                            <option value="VI">Virgin Islands, U.S.</option>
-                            <option value="WF">Wallis and Futuna</option>
-                            <option value="EH">Western Sahara</option>
-                            <option value="YE">Yemen</option>
-                            <option value="ZM">Zambia</option>
-                            <option value="ZW">Zimbabwe</option>
-                        </select><br>
-
-                        <input class="form-control" type="email" placeholder="Email" id="m_contactEmail" required name="m_contactEmail"><br>
-                        <input class="form-control" type="tel" placeholder="Phone" id="m_contactPhone" name="m_contactPhone"><br>
-                        <input class="form-control" type="url" placeholder="Website" id="m_website" name="m_website"><br>
-                        <input class="form-control" type="text" placeholder="Latitude" required id="m_lat" required
-                            name="m_lat"><br>
-                        <input class="form-control" type="text" placeholder="Longitude" required id="m_lng" required
-                            name="m_lng"><br>
-                        <input class="form-control" type="text" placeholder="Introduction" required id="m_intro"
-                            required name="m_intro"><br>
-
-                        <input id="submit" class="btn btn-primary" type="submit" value="Add Marker">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="modal fade" id="help-me" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Quick Help</h4>
-                </div>
-                <div class="modal-body">
-                    This is the admin dashboard of LibreHealth Atlas. Here You Create New Markers , download JSON data
-                    and see custom metrics
-                    <br><br>
-                    <div>
-                        To Create a New Marker , Click on the <b>Create New Marker</b> button and fill the form
-                    </div><br>
-                    <div>
-                        To Delete or Edit a Marker Select Manage Marker and choose your marker.
-                    </div><br>
-                    <div>
-                        To Export JSON data click on the <b>Export JSON</b> and select from "All" , "Only EHR" , "Only
-                        Toolkit" , "Only Radiology" ,or Get Any Country's data by providing first two initials of your
-                        chosen country and click the button.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="export-json" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Export JSON</h4>
-                </div>
-                <div class="modal-body">
-                    <a class="btn btn-success" href="/api/markers/">All Products</a>
-                    <br><br>
-                    <div>
-                        <a class="btn btn-success" href="/api/markers/product/ehr/">Only LH EHR</a>
-                    </div><br>
-                    <div>
-                        <a class="btn btn-success" href="/api/markers/product/toolkit/">Only LH Toolkit</a>
-                    </div>
-                    <br>
-                    <div>
-                        <a class="btn btn-success" href="/api/markers/product/radiology/">Only LH Radiology</a>
-                    </div>
-                    <hr>
-                    <div>
-                        <label class="form-label"> First Two Initials of Country:</label>
-                        <input id="ex-c" maxlength="2" class="form-control" placeholder="Example : US">
-                        <br>
-                        <a id="country-export-btn" class="btn btn-success" href="/api/markers/country/us">Sort by
-                            Country</a>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="gettoken" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Get Access Token</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Here's your Access Token! Select all and Copy!
-                    </p>
-                    <input class="form-control" id="m_token" name="m_token" readonly>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="del-m" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit / Delete Marker</h4>
-                </div>
-                <div class="modal-body">
-                    <label for="mid">Name of Marker : </label>
-                    <select class="form-control select" name="dmid" id="dmid"></select>
-                    <br>
-                    <input class="form-control btn btn-danger" onclick="del_marker()" value="Delete">
-                    <br><br>
-                    <input class="form-control btn btn-warning" onclick="edit_marker()" value="Edit">
-
-                    <!--  -->
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="makeadmin" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Make an Account Admin</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-group">
-                        <label for="nonadmin">Email of User : </label>
-                        <select class="form-control select" name="nonadmin" id="nonadmin"></select>
-                        <br>
-                        <input class="btn btn-success" onclick="makeadmin()" data-dismiss="modal" value="Make Admin">
-
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <% if (!user){ %>
-    <div id="login-area" class="container pt-3">
-        <div class="row justify-content-sm-center">
-            <div class="col-sm-6 col-md-4">
-
-                <div class="card border-info text-center">
-                    <div class="card-header">
-                        Login to Access Admin Dashboard
-                    </div>
-                    <div class="card-body">
-                        <img src="/static/imgs/user.png">
-                        <h4 class="text-center">LibreHealth Atlas Admin</h4>
-                        <% if (errormsg){ %>
-                        <p style="color: red;" class="text-center">
-                            <%= errormsg %>
-                        </p>
+                        <!-- <li id="reg-btn" class="nav-item naviconr"><a style="color: white;" class="nav-link" href="/admin/register">Register</a></li> -->
+                        <% if (!user){ %>
+                        <li id="reg-btn" class="nav-item naviconr"> <a style="color: white;" class="nav-link" href="/register"><i
+                                    class="fa fa-sign-in"></i> Register</a></li>
+                        <!-- <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">Admin</a></li> -->
                         <% } %>
-                        <form action="/admin/login" method="POST" class="form-signin">
-                            <input type="text" class="form-control mb-2" placeholder="Email" name="email" required
-                                autofocus>
-                            <input type="password" class="form-control mb-2" placeholder="Password" name="password"
-                                required>
-                            <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Sign in</button>
-                            <p> New User? <a href="/register/">Create Account Here!</a> </p>
+
+                        <% if (user){ %>
+                        <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link"
+                                href="/signout">
+                                <i class="fa fa-sign-out"></i> Logout</a></li>
+                        <% } %>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+
+        <% if (infomsg){ %>
+        <p style="color: steelblue ; background: silver" class="text-center">
+            <%- infomsg %>
+        </p>
+        <% } %>
+
+        <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">About</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR ,
+                            Toolkit
+                            and Radiology. This will be useful for new users to find fellow user and also request help
+                            and
+                            support in from them their locality.
+                        </div>
+                        <br>
+                        <small>
+                            <div>Special Thanks To ,</div>
+
+                            <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                                from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is
+                                licensed
+                                by
+                                <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
+                                    target="_blank">CC
+                                    3.0 BY</a></div>
+                            <div>
+                                GeoCoding by <a href="https://wiki.openstreetmap.org/wiki/Nominatim"> OpenStreetMap
+                                    Nominatim</a>
+                            </div>
+                            <div>
+                                All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                            </div>
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="newmarkermodal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Marker</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <input type="text" placeholder="Type" id="m_type"><br> -->
+                        <form action="/admin/addmarker" method="POST">
+                            <select required class="form-control" required name="m_tool" id="m_type">
+                                <option value="ehr">LibreHealth EHR</option>
+                                <option value="toolkit">LibreHealth Toolkit</option>
+                                <option value="radiology">LibreHealth Radiology</option>
+                            </select>
+                            <br><br>
+                            <input class="form-control" required type="text" placeholder="Version" name="m_version"
+                                required id="m_version"><br>
+                            <input class="form-control" required type="text" placeholder="Name" required name="m_name"
+                                id="m_name"><br>
+                            <input class="form-control" required type="text" placeholder="Patients" required id="m_pnum"
+                                name="m_pnum"><br>
+                            <input class="form-control" required type="text" placeholder="Address" required id="m_location"
+                                name="m_location"><br>
+                            <select class="form-control" required type="country" required id="m_country" name="m_country">
+                                <option value="IN">India</option>
+                                <option value="AF">Afghanistan</option>
+                                <option value="AX">Åland Islands</option>
+                                <option value="AL">Albania</option>
+                                <option value="DZ">Algeria</option>
+                                <option value="AS">American Samoa</option>
+                                <option value="AD">Andorra</option>
+                                <option value="AO">Angola</option>
+                                <option value="AI">Anguilla</option>
+                                <option value="AQ">Antarctica</option>
+                                <option value="AG">Antigua and Barbuda</option>
+                                <option value="AR">Argentina</option>
+                                <option value="AM">Armenia</option>
+                                <option value="AW">Aruba</option>
+                                <option value="AU">Australia</option>
+                                <option value="AT">Austria</option>
+                                <option value="AZ">Azerbaijan</option>
+                                <option value="BS">Bahamas</option>
+                                <option value="BH">Bahrain</option>
+                                <option value="BD">Bangladesh</option>
+                                <option value="BB">Barbados</option>
+                                <option value="BY">Belarus</option>
+                                <option value="BE">Belgium</option>
+                                <option value="BZ">Belize</option>
+                                <option value="BJ">Benin</option>
+                                <option value="BM">Bermuda</option>
+                                <option value="BT">Bhutan</option>
+                                <option value="BO">Bolivia, Plurinational State of</option>
+                                <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+                                <option value="BA">Bosnia and Herzegovina</option>
+                                <option value="BW">Botswana</option>
+                                <option value="BV">Bouvet Island</option>
+                                <option value="BR">Brazil</option>
+                                <option value="IO">British Indian Ocean Territory</option>
+                                <option value="BN">Brunei Darussalam</option>
+                                <option value="BG">Bulgaria</option>
+                                <option value="BF">Burkina Faso</option>
+                                <option value="BI">Burundi</option>
+                                <option value="KH">Cambodia</option>
+                                <option value="CM">Cameroon</option>
+                                <option value="CA">Canada</option>
+                                <option value="CV">Cape Verde</option>
+                                <option value="KY">Cayman Islands</option>
+                                <option value="CF">Central African Republic</option>
+                                <option value="TD">Chad</option>
+                                <option value="CL">Chile</option>
+                                <option value="CN">China</option>
+                                <option value="CX">Christmas Island</option>
+                                <option value="CC">Cocos (Keeling) Islands</option>
+                                <option value="CO">Colombia</option>
+                                <option value="KM">Comoros</option>
+                                <option value="CG">Congo</option>
+                                <option value="CD">Congo, the Democratic Republic of the</option>
+                                <option value="CK">Cook Islands</option>
+                                <option value="CR">Costa Rica</option>
+                                <option value="CI">Côte d'Ivoire</option>
+                                <option value="HR">Croatia</option>
+                                <option value="CU">Cuba</option>
+                                <option value="CW">Curaçao</option>
+                                <option value="CY">Cyprus</option>
+                                <option value="CZ">Czech Republic</option>
+                                <option value="DK">Denmark</option>
+                                <option value="DJ">Djibouti</option>
+                                <option value="DM">Dominica</option>
+                                <option value="DO">Dominican Republic</option>
+                                <option value="EC">Ecuador</option>
+                                <option value="EG">Egypt</option>
+                                <option value="SV">El Salvador</option>
+                                <option value="GQ">Equatorial Guinea</option>
+                                <option value="ER">Eritrea</option>
+                                <option value="EE">Estonia</option>
+                                <option value="ET">Ethiopia</option>
+                                <option value="FK">Falkland Islands (Malvinas)</option>
+                                <option value="FO">Faroe Islands</option>
+                                <option value="FJ">Fiji</option>
+                                <option value="FI">Finland</option>
+                                <option value="FR">France</option>
+                                <option value="GF">French Guiana</option>
+                                <option value="PF">French Polynesia</option>
+                                <option value="TF">French Southern Territories</option>
+                                <option value="GA">Gabon</option>
+                                <option value="GM">Gambia</option>
+                                <option value="GE">Georgia</option>
+                                <option value="DE">Germany</option>
+                                <option value="GH">Ghana</option>
+                                <option value="GI">Gibraltar</option>
+                                <option value="GR">Greece</option>
+                                <option value="GL">Greenland</option>
+                                <option value="GD">Grenada</option>
+                                <option value="GP">Guadeloupe</option>
+                                <option value="GU">Guam</option>
+                                <option value="GT">Guatemala</option>
+                                <option value="GG">Guernsey</option>
+                                <option value="GN">Guinea</option>
+                                <option value="GW">Guinea-Bissau</option>
+                                <option value="GY">Guyana</option>
+                                <option value="HT">Haiti</option>
+                                <option value="HM">Heard Island and McDonald Islands</option>
+                                <option value="VA">Holy See (Vatican City State)</option>
+                                <option value="HN">Honduras</option>
+                                <option value="HK">Hong Kong</option>
+                                <option value="HU">Hungary</option>
+                                <option value="IS">Iceland</option>
+                                <option value="IN">India</option>
+                                <option value="ID">Indonesia</option>
+                                <option value="IR">Iran, Islamic Republic of</option>
+                                <option value="IQ">Iraq</option>
+                                <option value="IE">Ireland</option>
+                                <option value="IM">Isle of Man</option>
+                                <option value="IL">Israel</option>
+                                <option value="IT">Italy</option>
+                                <option value="JM">Jamaica</option>
+                                <option value="JP">Japan</option>
+                                <option value="JE">Jersey</option>
+                                <option value="JO">Jordan</option>
+                                <option value="KZ">Kazakhstan</option>
+                                <option value="KE">Kenya</option>
+                                <option value="KI">Kiribati</option>
+                                <option value="KP">Korea, Democratic People's Republic of</option>
+                                <option value="KR">Korea, Republic of</option>
+                                <option value="KW">Kuwait</option>
+                                <option value="KG">Kyrgyzstan</option>
+                                <option value="LA">Lao People's Democratic Republic</option>
+                                <option value="LV">Latvia</option>
+                                <option value="LB">Lebanon</option>
+                                <option value="LS">Lesotho</option>
+                                <option value="LR">Liberia</option>
+                                <option value="LY">Libya</option>
+                                <option value="LI">Liechtenstein</option>
+                                <option value="LT">Lithuania</option>
+                                <option value="LU">Luxembourg</option>
+                                <option value="MO">Macao</option>
+                                <option value="MK">Macedonia, the former Yugoslav Republic of</option>
+                                <option value="MG">Madagascar</option>
+                                <option value="MW">Malawi</option>
+                                <option value="MY">Malaysia</option>
+                                <option value="MV">Maldives</option>
+                                <option value="ML">Mali</option>
+                                <option value="MT">Malta</option>
+                                <option value="MH">Marshall Islands</option>
+                                <option value="MQ">Martinique</option>
+                                <option value="MR">Mauritania</option>
+                                <option value="MU">Mauritius</option>
+                                <option value="YT">Mayotte</option>
+                                <option value="MX">Mexico</option>
+                                <option value="FM">Micronesia, Federated States of</option>
+                                <option value="MD">Moldova, Republic of</option>
+                                <option value="MC">Monaco</option>
+                                <option value="MN">Mongolia</option>
+                                <option value="ME">Montenegro</option>
+                                <option value="MS">Montserrat</option>
+                                <option value="MA">Morocco</option>
+                                <option value="MZ">Mozambique</option>
+                                <option value="MM">Myanmar</option>
+                                <option value="NA">Namibia</option>
+                                <option value="NR">Nauru</option>
+                                <option value="NP">Nepal</option>
+                                <option value="NL">Netherlands</option>
+                                <option value="NC">New Caledonia</option>
+                                <option value="NZ">New Zealand</option>
+                                <option value="NI">Nicaragua</option>
+                                <option value="NE">Niger</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="NU">Niue</option>
+                                <option value="NF">Norfolk Island</option>
+                                <option value="MP">Northern Mariana Islands</option>
+                                <option value="NO">Norway</option>
+                                <option value="OM">Oman</option>
+                                <option value="PK">Pakistan</option>
+                                <option value="PW">Palau</option>
+                                <option value="PS">Palestinian Territory, Occupied</option>
+                                <option value="PA">Panama</option>
+                                <option value="PG">Papua New Guinea</option>
+                                <option value="PY">Paraguay</option>
+                                <option value="PE">Peru</option>
+                                <option value="PH">Philippines</option>
+                                <option value="PN">Pitcairn</option>
+                                <option value="PL">Poland</option>
+                                <option value="PT">Portugal</option>
+                                <option value="PR">Puerto Rico</option>
+                                <option value="QA">Qatar</option>
+                                <option value="RE">Réunion</option>
+                                <option value="RO">Romania</option>
+                                <option value="RU">Russian Federation</option>
+                                <option value="RW">Rwanda</option>
+                                <option value="BL">Saint Barthélemy</option>
+                                <option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+                                <option value="KN">Saint Kitts and Nevis</option>
+                                <option value="LC">Saint Lucia</option>
+                                <option value="MF">Saint Martin (French part)</option>
+                                <option value="PM">Saint Pierre and Miquelon</option>
+                                <option value="VC">Saint Vincent and the Grenadines</option>
+                                <option value="WS">Samoa</option>
+                                <option value="SM">San Marino</option>
+                                <option value="ST">Sao Tome and Principe</option>
+                                <option value="SA">Saudi Arabia</option>
+                                <option value="SN">Senegal</option>
+                                <option value="RS">Serbia</option>
+                                <option value="SC">Seychelles</option>
+                                <option value="SL">Sierra Leone</option>
+                                <option value="SG">Singapore</option>
+                                <option value="SX">Sint Maarten (Dutch part)</option>
+                                <option value="SK">Slovakia</option>
+                                <option value="SI">Slovenia</option>
+                                <option value="SB">Solomon Islands</option>
+                                <option value="SO">Somalia</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="GS">South Georgia and the South Sandwich Islands</option>
+                                <option value="SS">South Sudan</option>
+                                <option value="ES">Spain</option>
+                                <option value="LK">Sri Lanka</option>
+                                <option value="SD">Sudan</option>
+                                <option value="SR">Suriname</option>
+                                <option value="SJ">Svalbard and Jan Mayen</option>
+                                <option value="SZ">Swaziland</option>
+                                <option value="SE">Sweden</option>
+                                <option value="CH">Switzerland</option>
+                                <option value="SY">Syrian Arab Republic</option>
+                                <option value="TW">Taiwan, Province of China</option>
+                                <option value="TJ">Tajikistan</option>
+                                <option value="TZ">Tanzania, United Republic of</option>
+                                <option value="TH">Thailand</option>
+                                <option value="TL">Timor-Leste</option>
+                                <option value="TG">Togo</option>
+                                <option value="TK">Tokelau</option>
+                                <option value="TO">Tonga</option>
+                                <option value="TT">Trinidad and Tobago</option>
+                                <option value="TN">Tunisia</option>
+                                <option value="TR">Turkey</option>
+                                <option value="TM">Turkmenistan</option>
+                                <option value="TC">Turks and Caicos Islands</option>
+                                <option value="TV">Tuvalu</option>
+                                <option value="UG">Uganda</option>
+                                <option value="UA">Ukraine</option>
+                                <option value="AE">United Arab Emirates</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="US">United States</option>
+                                <option value="UM">United States Minor Outlying Islands</option>
+                                <option value="UY">Uruguay</option>
+                                <option value="UZ">Uzbekistan</option>
+                                <option value="VU">Vanuatu</option>
+                                <option value="VE">Venezuela, Bolivarian Republic of</option>
+                                <option value="VN">Viet Nam</option>
+                                <option value="VG">Virgin Islands, British</option>
+                                <option value="VI">Virgin Islands, U.S.</option>
+                                <option value="WF">Wallis and Futuna</option>
+                                <option value="EH">Western Sahara</option>
+                                <option value="YE">Yemen</option>
+                                <option value="ZM">Zambia</option>
+                                <option value="ZW">Zimbabwe</option>
+                            </select><br>
+
+                            <input class="form-control" type="email" placeholder="Email" id="m_contactEmail" required
+                                name="m_contactEmail"><br>
+                            <input class="form-control" type="tel" placeholder="Phone" id="m_contactPhone" name="m_contactPhone"><br>
+                            <input class="form-control" type="url" placeholder="Website" id="m_website" name="m_website"><br>
+
+                            <input class="form-control" type="text" placeholder="Introduction" required id="m_intro"
+                                required name="m_intro"><br>
+                            <!-- <input type="checkbox" id="manual_ll">&nbspAdd Latitude/Longitude Manualy -->
+                            <input class="form-control" type="text" placeholder="Latitude" required id="m_lat" required
+                                name="m_lat"><br>
+                            <input class="form-control" type="text" placeholder="Longitude" required id="m_lng"
+                                required name="m_lng"><br>
+                            <small class="form-label" style="color: gray">Values of Latitude/Longitude Are Automaticaly
+                                Taken from Address. Edit Them If Needed</small>
+                            <br><br>
+
+                            <input id="submit" class="btn btn-primary" type="submit" value="Add Marker">
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <% } else{ %>
-
-
-    <div id="button-area" style="" class="container pt-3">
-        <div class="d-flex justify-content-around">
-            <div class="col-sm-10">
-                <canvas id="toolchart" width="100" height="40"></canvas>
-
-
-                <br>
-                <div style="margin-left: 10px;" class="">
-                    <div style="padding-top : 5px;" class="btn-toolbar inline-block" role="toolbar" aria-label="Toolbar with button groups">
-                        <div style="padding-top : 5px;" class="btn-group mr-4" class="btn-group mr-4" role="group"
-                            aria-label="First group">
-                            <button id="Create-new" class="btn btn-primary" data-toggle="modal" data-target="#newmarkermodal">Create
-                                New Marker</button>
-
-                        </div>
-                        <div style="padding-top : 5px;" class="btn-group mr-4 text-center" role="group" aria-label="second group">
-                            <button id="export-json" class="btn btn-info" data-toggle="modal" data-target="#export-json">Export
-                                JSON</button>
-
-                        </div>
-                        <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="second group">
-                            <button id="del-m-btn" class="btn btn-danger" data-toggle="modal" data-target="#del-m">Manage
-                                Marker</button>
-
-                        </div>
-                        <% if (isadmin){ %>
-                        <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="t group">
-                            <button id="makeadmin-btn" class="btn btn-warning" data-toggle="modal" data-target="#makeadmin">Make
-                                a SU</button>
-
-                        </div>
-                        <% } %>
-                        <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="second group">
-                            <button id="gettoken-m-btn" class="btn btn-success" data-toggle="modal" data-target="#gettoken">Get
-                                Access Token</button>
-
-                        </div>
-                        <div class="btn-group mr-4" role="group" style="padding-top : 5px;" aria-label="Third group">
-                            <button id="help-show" class="btn btn-secondary" data-toggle="modal" data-target="#help-me">Help</button>
-                        </div>
-
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
 
-    </div>
-    <% } %>
 
+
+        <div class="modal fade" id="help-me" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Quick Help</h4>
+                    </div>
+                    <div class="modal-body">
+                        This is the admin dashboard of LibreHealth Atlas. Here You Create New Markers , download JSON
+                        data
+                        and see custom metrics
+                        <br><br>
+                        <div>
+                            To Create a New Marker , Click on the <b>Create New Marker</b> button and fill the form
+                        </div><br>
+                        <div>
+                            To Delete or Edit a Marker Select Manage Marker and choose your marker.
+                        </div><br>
+                        <div>
+                            To Export JSON data click on the <b>Export JSON</b> and select from "All" , "Only EHR" ,
+                            "Only
+                            Toolkit" , "Only Radiology" ,or Get Any Country's data by providing first two initials of
+                            your
+                            chosen country and click the button.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="export-json" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Export JSON</h4>
+                    </div>
+                    <div class="modal-body">
+                        <a class="btn btn-success" href="/api/markers/">All Products</a>
+                        <br><br>
+                        <div>
+                            <a class="btn btn-success" href="/api/markers/product/ehr/">Only LH EHR</a>
+                        </div><br>
+                        <div>
+                            <a class="btn btn-success" href="/api/markers/product/toolkit/">Only LH Toolkit</a>
+                        </div>
+                        <br>
+                        <div>
+                            <a class="btn btn-success" href="/api/markers/product/radiology/">Only LH Radiology</a>
+                        </div>
+                        <hr>
+                        <div>
+                            <label class="form-label"> First Two Initials of Country:</label>
+                            <input id="ex-c" maxlength="2" class="form-control" placeholder="Example : US">
+                            <br>
+                            <a id="country-export-btn" class="btn btn-success" href="/api/markers/country/us">Sort by
+                                Country</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="gettoken" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Get Access Token</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Here's your Access Token! Select all and Copy!
+                        </p>
+                        <input class="form-control" id="m_token" name="m_token" readonly>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="del-m" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Manage Markers</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label for="mid">Name of Marker : </label>
+                        <select class="form-control select" name="dmid" id="dmid"></select>
+                        <br>
+                        <input class="form-control btn btn-danger" onclick="del_marker()" value="Delete">
+                        <br><br>
+                        <input class="form-control btn btn-warning" onclick="edit_marker()" value="Edit">
+
+                        <!--  -->
+                        <hr>
+                        <a class="form-control btn btn-primary" href="/admin/bulkdel/"> Bulk Actions </a>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="modal fade" id="makeadmin" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Make an Account Admin</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-group">
+                            <label for="nonadmin">Email of User : </label>
+                            <select class="form-control select" name="nonadmin" id="nonadmin"></select>
+                            <br>
+                            <input class="btn btn-success" onclick="makeadmin()" data-dismiss="modal" value="Make Admin">
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <% if (!user){ %>
+        <div id="login-area" class="container pt-3">
+            <div class="row justify-content-sm-center">
+                <div class="col-sm-6 col-md-4">
+
+                    <div class="card border-info text-center">
+                        <div class="card-header">
+                            Login to Access Admin Dashboard
+                        </div>
+                        <div class="card-body">
+                            <img src="/static/imgs/user.png">
+                            <h4 class="text-center">LibreHealth Atlas Admin</h4>
+                            <% if (errormsg){ %>
+                            <p style="color: red;" class="text-center">
+                                <%= errormsg %>
+                            </p>
+                            <% } %>
+                            <form action="/admin/login" method="POST" class="form-signin">
+                                <input type="text" class="form-control mb-2" placeholder="Email" name="email" required
+                                    autofocus>
+                                <input type="password" class="form-control mb-2" placeholder="Password" name="password"
+                                    required>
+                                <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Sign in</button>
+                                <p> New User? <a href="/register/">Create Account Here!</a> </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } else{ %>
+
+
+        <div id="button-area" style="" class="container pt-3">
+            <div class="d-flex justify-content-around">
+                <div class="col-sm-12">
+                        <div id="button-admin" style="margin: auto;text-align: center;"  class="btn-toolbar inline-block" >
+                                <!-- <div style="padding-top : 5px;" class="btn-toolbar inline-block" role="toolbar" aria-label="Toolbar with button groups"> -->
+                                    <!-- <div style="padding-top : 5px;" class="btn-group mr-4" class="btn-group mr-4" role="group" -->
+                                        <!-- aria-label="First group"> -->
+                                        <button id="Create-new" class="btn btn-primary" data-toggle="modal" data-target="#newmarkermodal">Create
+                                            New Marker</button>
+        
+                                    <!-- </div> -->
+                                    <!-- <div style="padding-top : 5px;" class="btn-group mr-4 text-center" role="group" aria-label="second group"> -->
+                                        <button id="export-json" class="btn btn-info" data-toggle="modal" data-target="#export-json">Export
+                                            JSON</button>
+        
+                                    <!-- </div> -->
+                                    <!-- <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="second group"> -->
+                                        <button id="del-m-btn" class="btn btn-danger" onclick="window.location = '/admin/managemarkers'">Manage
+                                            Marker</button>
+        
+                                    <!-- </div> -->
+                                    <!-- <% if (isadmin){ %> -->
+                                    <!-- <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="t group"> -->
+                                        <!-- <button id="makeadmin-btn" class="btn btn-warning" data-toggle="modal" data-target="#makeadmin">Make -->
+                                            <!-- a SU</button> -->
+        
+                                    <!-- </div> -->
+                                    <!-- <% } %> -->
+                                    <!-- <div class="btn-group mr-4" style="padding-top : 5px;" role="group" aria-label="second group"> -->
+                                        <button id="gettoken-m-btn" class="btn btn-success" data-toggle="modal" data-target="#gettoken">Get
+                                            Access Token</button>
+        
+                                    <!-- </div> -->
+                                    <!-- <div class="btn-group mr-4" role="group" style="padding-top : 5px;" aria-label="Third group"> -->
+                                        <button id="help-show" class="btn btn-secondary" data-toggle="modal" data-target="#help-me">Help</button>
+                                    <!-- </div> -->
+        
+                                <!-- </div> -->
+                            </div>
+                    <!-- <canvas id="toolchart" width="100" height="40"></canvas> -->
+
+
+                    <br>
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <h4 class="card-title mb-0">Product Used</h4>
+                                        <!-- <div class="small text-muted">October 2017</div> -->
+                                    </div>
+                                    <!--/.col-->
+
+                                    <!--/.col-->
+
+
+                                </div>
+                                <!--/.row-->
+                                <div class="chart-wrapper">
+                                    <canvas id="toolchart"></canvas>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row" style="padding: 10px;">
+                    <div class="col-sm-8 col-lg-4">
+                        <div class="card text-white bg-info">
+                            <div class="card-body pb-0 text-center">
+                                <h4 class="mb-0">
+                                    <strong class="ehr-title">LH EHR</strong>
+                                </h4>
+                                <span class="text-light">User : </span>&nbsp;<span id="ehr-count"></span><br>
+                                <span class="text-light">Patients : </span>&nbsp;<span id="ehr-p-count"></span><br><br>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-lg-4">
+                            <div class="card text-white bg-info">
+                                <div class="card-body pb-0 text-center">
+                                    <h4 class="mb-0">
+                                            <strong class="ehr-title">LH Toolkit</strong>
+                                    </h4>
+                                    <span class="text-light">User : </span>&nbsp;<span id="toolkit-count"></span><br>
+                                    <span class="text-light">Patients : </span>&nbsp;<span id="toolkit-p-count"></span><br><br>
+    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-lg-4">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body pb-0 text-center">
+                                        <h4 class="mb-0">
+                                                <strong class="ehr-title">LH Radiology</strong>
+                                        </h4>
+                                        <span class="text-light">User : </span>&nbsp;<span id="radiology-count"></span><br>
+                                        <span class="text-light">Patients : </span>&nbsp;<span id="radiology-p-count"></span><br><br>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+
+        </div>
+        <% } %>
+
+    </div>
     </div>
 
 
@@ -644,7 +869,7 @@
             // }
         });
 
-        
+
 
         // document.getElementById("ex-c").onchange(function(value){
         //     document.getElementById("country-export-btn").value = "/api/markers/country/" + value;
@@ -668,6 +893,13 @@
         });
 
 
+        function fetchJSON(url) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", url, false);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+
         function makeadmin() {
             ue = document.getElementById("nonadmin").value;
             $.post("/admin/makeadmin", {
@@ -675,6 +907,7 @@
                 },
                 function (data, status) {});
         }
+
         function del_marker() {
             var v = document.getElementById("dmid").value;
             $.post("/admin/del", {
@@ -689,6 +922,53 @@
             var v = document.getElementById("dmid").value;
             window.location = "/admin/editmarker/" + v;
         }
+
+        document.getElementById("m_location").onfocusout = function () {
+            var m_location = document.getElementById("m_location").value;
+            var geojson = JSON.parse(fetchJSON("https://nominatim.openstreetmap.org/search/?q=" + m_location +
+                "&format=json"));
+            console.log(geojson[0].lat)
+            document.getElementById("m_lat").value = geojson[0].lat;
+            document.getElementById("m_lng").value = geojson[0].lon;
+        }
+
+
+        // function add_marker() {
+        //     var m_name = document.getElementById("m_name").value;
+        //     var m_version = document.getElementById("m_version").value;
+        //     var m_pnum = document.getElementById("m_pnum").value;
+        //     var m_location = document.getElementById("m_location").value;
+        //     var m_country = document.getElementById("m_country").value;
+        //     var m_contactEmail = document.getElementById("m_contactEmail").value;
+        //     var m_contactPhone = document.getElementById("m_contactPhone").value;
+        //     var m_website = document.getElementById("m_website").value;
+        //     var m_intro = document.getElementById("m_intro").value;
+        //     var m_lat = document.getElementById("m_lat").value;
+        //     var m_lng = document.getElementById("m_lng").value;
+
+        //     $.post("/admin/addmarker", {
+        //             m_name: m_name,
+        //             m_version : m_version.trim(),
+        //             m_pnum : m_pnum.trim(),
+        //             m_location : m_location.trim(),
+        //             m_country: m_country,
+        //             m_contactEmail : m_contactEmail.trim(),
+        //             m_contactPhone : m_contactPhone.trim(),
+        //             m_intro : m_intro.trim(),
+        //             m_website : m_website.trim(),
+        //             m_lat : m_lng.trim(),
+        //             m_lng : m_lng.trim()
+        //         },
+        //         function (data, status) {
+        //             alert("Successfully Saved Marker");
+        //             console.log(data , status)
+        //         });
+
+
+
+
+
+        // }
     </script>
 
     <% } %>
@@ -701,7 +981,8 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr(
+                        'value',
                         value.id));
                     // console.log(value.name);
                 });
@@ -716,12 +997,32 @@
             dataType: 'json',
             success: function (json) {
                 $.each(json, function (i, value) {
-                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr('value',
+                    $('#dmid').append($('<option>').text(value.id + " : " + value.name).attr(
+                        'value',
                         value.id));
                     // console.log(value.name);
                 });
             }
         });
+    </script>
+    <% } %>
+    <% if (user) { %>
+    <script>
+        $(document).ready(function () {
+
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+        document.getElementById("ehr-count").innerHTML = ehr_value();
+        document.getElementById("toolkit-count").innerHTML = toolkit_value();
+        document.getElementById("radiology-count").innerHTML = rad_value();
+        document.getElementById("ehr-p-count").innerHTML = ehr_p_value();
+        document.getElementById("toolkit-p-count").innerHTML = toolkit_p_value();
+        document.getElementById("radiology-p-count").innerHTML = rad_p_value();
     </script>
     <% } %>
 </body>

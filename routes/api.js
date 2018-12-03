@@ -48,11 +48,22 @@ routes.get("*", (req, res, next) => {
 });
 
 routes.get('/markers/', (req, res) => {
+    let forbulk = req.query.forbulk;
+
+    if (forbulk == "true"){
+        Marker.findAll({ attributes: ["id" , 'name' , "creator" , "lat" , "lng"]})
+        .then(marker => {
+            console.log("hello all product with bulk");
+            res.json(marker);
+        });
+
+    }else{
     Marker.findAll()
         .then(marker => {
             console.log("hello all product");
             res.json(marker);
         });
+    }
 
 });
 
@@ -206,6 +217,7 @@ routes.get('/markers/country/:country/', (req, res) => {
 
 routes.get('/markers/creator/:em', check('em').isEmail(), (req, res) => {
     let email = req.params.em;
+    let forbulk = req.query.forbulk;
     // check(email).isEmail();
 
 
@@ -216,6 +228,19 @@ routes.get('/markers/creator/:em', check('em').isEmail(), (req, res) => {
         });
         return;
     }
+    if (forbulk == "true"){
+
+        Marker.findAll({ attributes: ["id" , 'name' , "creator" , "lat" , "lng"] ,
+            where: {
+                creator: email
+            }
+        })
+        .then(marker => {
+            console.log("hello creator for bulk");
+            res.json(marker);
+        });
+
+    }else{
     Marker.findAll({
             where: {
                 creator: email
@@ -225,18 +250,22 @@ routes.get('/markers/creator/:em', check('em').isEmail(), (req, res) => {
             console.log("hello creator");
             res.json(marker);
         });
+    }
 
 });
 
 routes.get("/nonadmins", (req, res) => {
-    let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
+    // let token = req.query.token || req.cookies.token || req.body.token || req.headers['x-access-token'];
+    let forbulk = req.query.forbulk;
     // console.log(req.cookies.token)
     // jwt.verify(token, JWT_SECRET, function (err, decoded) {
     //     if (err){ return res.status(401).send({
     //         auth: false,
     //         message: 'Unauthorised!'
     //     });}else{
-    User.findAll({
+
+    if (forbulk == "true"){
+    User.findAll({ attributes: ["id" , 'email' , "createdAt"] ,
             where: {
                 issuper: 0 || null
             }
@@ -246,6 +275,16 @@ routes.get("/nonadmins", (req, res) => {
         });
     //     }
     // });
+    } else{
+        User.findAll({ 
+            where: {
+                issuper: 0 || null
+            }
+        })
+        .then(user => {
+            res.json(user)
+        });
+    }
 
 
 

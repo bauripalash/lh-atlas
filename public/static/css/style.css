@@ -44,12 +44,14 @@ a.disabled {
 
     position: absolute;
     z-index: 999;
-    right: 5%;
+    /* margin-right: 5px; */
+    right:0%;
     top: 25%;
-    max-width: 140px;
+    max-width: 145px;
     background: #ffffff;
     opacity: 0.7;
-    border-radius: 5%;
+    border: 1px solid gray;
+    border-radius: 5px;
 }
 
 /* .ibox {
@@ -132,4 +134,14 @@ a.disabled {
 .m-email,
 .m-email a {
     color: #f59031;
+}
+.chart-wrapper{
+width: 100% !important;
+height: 50% !important; 
+}
+
+#button-admin button{
+    margin:auto;
+  display:block;
+    margin-bottom: 15px;
 }
