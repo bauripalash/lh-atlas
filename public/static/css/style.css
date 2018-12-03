@@ -135,3 +135,13 @@ a.disabled {
 .m-email a {
     color: #f59031;
 }
+.chart-wrapper{
+width: 100% !important;
+height: 50% !important; 
+}
+
+#button-admin button{
+    margin:auto;
+  display:block;
+    margin-bottom: 15px;
+}

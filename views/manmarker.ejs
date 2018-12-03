@@ -1,0 +1,426 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>LibreHealth Atlas</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="static/imgs/lh-logo-o.jpg">
+    <meta name="description" content="Atlas for librehealth to show users , events and support">
+    <meta name="keywords" content="LibreHealth , healthit , atlas , map , open">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+    <link type="text/css" href="/static/css/style.css" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!--Top navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light nav-down">
+        <div class="container pr-0">
+            <a class="navbar-brand" href="/admin">
+                <img class="logo-navbar" src="https://cdn.glitch.com/505f7459-b656-4c9c-a527-12d817d4dbf1%2Flh-logo.png?1542948451528"
+                    alt="logo"> <b style="color:white;">Atlas</b>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-togg"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-togg">
+
+                <ul class="navbar-nav ml-auto">
+
+                    <li><a style="color: white;" href="#" class="nav-link" data-toggle="modal" data-target="#helpmodal">
+                            <i class="fa fa-question-circle"></i> About</a></li>
+                    <!-- <li class="nav-item navicon">|</li> -->
+
+                    <% if (user){ %>
+
+                    <li id="admin-btn" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/admin">
+                            <i class="fa fa-tachometer"></i> Admin</a></li>
+                    <% } %>
+
+                    <% if (user){ %>
+                    <li id="signout" style="" class="nav-item navicon"><a style="color: white;" class="nav-link" href="/signout">
+                            <i class="fa fa-sign-out"></i> Logout</a></li>
+                    <% } %>
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+   
+
+    <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">About</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        LibreHealth Atlas is an easy to use map of users of LibreHealth Products such as EHR , Toolkit
+                        and Radiology. This will be useful for new users to find fellow user and also request help and
+                        support in from them their locality.
+                    </div>
+                    <br>
+                    <small>
+                        <div>Special Thanks To ,</div>
+
+                        <div>Map Marker Icons made by <a href="https://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a>
+                            from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed
+                            by
+                            <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0"
+                                target="_blank">CC
+                                3.0 BY</a></div>
+                        <div>
+                            GeoCoding by <a href="https://wiki.openstreetmap.org/wiki/Nominatim"> OpenStreetMap
+                                Nominatim</a>
+                        </div>
+                        <div>
+                            All the LibreHealth icons used here are owned by <a href="http://librehealth.io/">LibreHealth</a>
+                        </div>
+                    </small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% if (isadmin) { %>
+    <div id="bulkmain" class="container">
+            <div style="color: grey">
+                    <a href="/admin">Dashboard</a> / Manage / <a href="/admin/managemarkers">Marker</a>
+                </div>
+        <div class="card">
+            <div class="card-heading d-inline-block">
+                <p style="float : left; margin: 15px;"> Sort By Creator </p>
+                <select style="float : left; margin: 15px;" class="select" name="creator" id="creator">
+
+                    <option value="all">All</option>
+                </select>
+                <button class="btn btn-sm btn-dark" style="margin: 12px" id="sortme">Sort</button>
+                <button style="float : right; margin: 15px;" class="btn btn-sm btn-danger" onclick="delete_selected()">
+                    Delete Selected Markers </button>
+            </div>
+
+            <div class="card-body">
+                <div style="padding: 10px;" class="table-responsive" id="bulktable">
+
+                </div>
+                <p class="text-center" id="nomarker">No Marker Found!</p>
+            </div>
+        </div>
+        <!-- Hello Admin -->
+    </div>
+    <% } %>
+
+
+    <% if (!isadmin) { %>
+        <div id="bulkmain" class="container">
+                <div style="color: grey">
+                        <a href="/admin">Dashboard</a> / Manage / <a href="/admin/managemarkers">Marker</a>
+                    </div>
+            <div class="card">
+                <div class="card-heading d-inline-block">
+                    <button style="float : right; margin: 15px;" class="btn btn-sm btn-danger" onclick="delete_selected()">
+                        Delete Selected Markers </button>
+                </div>
+    
+                <div class="card-body">
+                    <div style="padding: 10px;" class="table-responsive" id="bulktable">
+    
+                    </div>
+                    <p class="text-center" id="nomarker">No Marker Found!</p>
+
+                </div>
+            </div>
+            <!-- Hello Admin -->
+        </div>
+    <% } %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+        crossorigin=""></script>
+    <!-- <script src="static/js/main.js"></script -->
+    <script>
+        function fetchJSON(url) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", url, false);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+    </script>
+    <% if (isadmin) { %>
+    <script>
+        var jq = "/api/markers/?forbulk=true"
+        var mb = JSON.parse(fetchJSON(jq))
+
+        $.ajax({
+            url: '/api/allusers',
+            type: 'GET',
+            dataType: 'json',
+            success: function (json) {
+                $.each(json, function (i, value) {
+                    $('#creator').append($('<option>').text(value.id + " : " + value.email).attr(
+                        'value', value.email));
+
+                });
+            }
+        });
+
+
+
+
+
+        // $('#creator').on('change', function (e) {
+        //     // var optionSelected = $("option:selected", this);
+        //     console.log(this.value);
+        //     if (this.value != "all"){
+        //         jq = "/api/markers/creator/" + this.value +"/?forbulk=true"
+        //     }else{
+        //         jq = "/api/markers/?forbulk=true"
+        //     }
+
+        // });
+        function get_sort_url() {
+            var x = document.getElementById("creator").value;
+            if (x == "all") {
+                return "/api/markers/?forbulk=true"
+            } else {
+                return "/api/markers/creator/" + x + "/?forbulk=true"
+            }
+        }
+
+
+
+        function jsontotable(myBooks) {
+
+            // console.log(ev , myBooks)
+            // console.log("/api/markers/creator/<%= user %>")
+
+            // EXTRACT VALUE FOR HTML HEADER. 
+            // ('Book ID', 'Book Name', 'Category' and 'Price')
+            // var col = ['#' , 'Name' , 'Product' , 'Version' , 'Patients' , 'Latitude' , 'Longitude' , 'Country' , 'Address'];
+            var col = ["Edit" , "#", "ID", "Name", "Creator", "Latitude", "Longitude"]
+            var col_meta = ["Edit" , "#"]
+            // console.log(col)
+            for (var i = 0; i < myBooks.length; i++) {
+                for (var key in myBooks[i]) {
+                    if (col_meta.indexOf(key) === -1) {
+                        col_meta.push(key);
+                    }
+                }
+            }
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+            table.classList.add("table");
+            table.classList.add("table-sm");
+            table.classList.add("table-hover");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+            var tr = table.insertRow(-1); // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th"); // TABLE HEADER.
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < myBooks.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col_meta.length; j++) {
+
+                    var tabCell = tr.insertCell(-1);
+                    // console.log(myBooks[i].id)
+                    if (j == 1) {
+                        tabCell.innerHTML = '<input type="checkbox" name="todelete" value=' + myBooks[i].id + '>'
+                    }else if(j == 0){
+                        tabCell.innerHTML = '<a class="btn btn-sm btn-warning" href="/admin/editmarker/' + myBooks[i].id + '">Edit</a>'
+                    } else {
+                        tabCell.innerHTML = myBooks[i][col_meta[j]];
+                    }
+
+                }
+                document.getElementById("nomarker").innerHTML = ""
+            }
+
+            // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+            var divContainer = document.getElementById("bulktable");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(table);
+            // console.log(col)
+        }
+
+        function get_selected() {
+            var l = [];
+            $("input:checkbox[name=todelete]:checked").each(function () {
+                l.push(parseInt($(this).val()));
+
+            });
+            return l;
+        }
+
+        function delete_selected() {
+
+            var r = confirm("Are You Sure? You Want to Delete These Markers?");
+            if (r == true) {
+                console.log("true", get_selected())
+                $.post("/admin/bdel", {
+                        mid: get_selected(),
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            alert("Successfully Deleted");
+                            window.location.reload()
+                        } else {
+                            alert("Failed to Deleted! DB Error");
+                        }
+
+                    });
+            } else {
+                console.log("false")
+            }
+        }
+
+        jsontotable(mb);
+        $( "#sortme" ).click(function() {
+            jsontotable(JSON.parse(fetchJSON(get_sort_url())))
+        });
+        // document.getElementById("sortme").addEventListener("click", jsontotable.bind(null,JSON.parse(fetchJSON(get_sort_url()))),false)
+    </script>
+    <% } %>
+
+
+    <% if (!isadmin) { %>
+    <script>
+        $.ajax({
+            url: '/api/nonadmins',
+            type: 'GET',
+            dataType: 'json',
+            success: function (json) {
+                $.each(json, function (i, value) {
+                    $('#creator').append($('<option>').text(value.id + " : " + value.email).attr(
+                        'value', value.email));
+
+                });
+            }
+        });
+
+        function jsontotable() {
+
+            myBooks = JSON.parse(fetchJSON("/api/markers/creator/<%= user %>/?forbulk=true"))
+            // console.log("/api/markers/creator/<%= user %>")
+
+            // EXTRACT VALUE FOR HTML HEADER. 
+            // ('Book ID', 'Book Name', 'Category' and 'Price')
+            // var col = ['#' , 'Name' , 'Product' , 'Version' , 'Patients' , 'Latitude' , 'Longitude' , 'Country' , 'Address'];
+            var col = ["Edit" , "#", "ID", "Name", "Creator", "Latitude", "Longitude"]
+            var col_meta = ["Edit" , "#"]
+            // console.log(col)
+            for (var i = 0; i < myBooks.length; i++) {
+                for (var key in myBooks[i]) {
+                    if (col_meta.indexOf(key) === -1) {
+                        col_meta.push(key);
+                    }
+                }
+            }
+
+            // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+            table.classList.add("table");
+            table.classList.add("table-sm");
+            table.classList.add("table-hover");
+
+            // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+            var tr = table.insertRow(-1); // TABLE ROW.
+
+            for (var i = 0; i < col.length; i++) {
+                var th = document.createElement("th"); // TABLE HEADER.
+                th.innerHTML = col[i];
+                tr.appendChild(th);
+            }
+
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < myBooks.length; i++) {
+
+                tr = table.insertRow(-1);
+
+                for (var j = 0; j < col_meta.length; j++) {
+
+                    var tabCell = tr.insertCell(-1);
+                    // console.log(myBooks[i].id)
+                    if (j == 1) {
+                        tabCell.innerHTML = '<input type="checkbox" name="todelete" value=' + myBooks[i].id + '>'
+                    }else if(j == 0){
+                        tabCell.innerHTML = '<a class="btn btn-sm btn-warning" href="/admin/editmarker/' + myBooks[i].id + '">Edit</a>'
+                    } else {
+                        tabCell.innerHTML = myBooks[i][col_meta[j]];
+                    }
+
+                }
+                document.getElementById("nomarker").innerHTML = ""
+            }
+
+            // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+            var divContainer = document.getElementById("bulktable");
+            divContainer.innerHTML = "";
+            divContainer.appendChild(table);
+            // console.log(col)
+        }
+
+        function get_selected() {
+            var l = [];
+            $("input:checkbox[name=todelete]:checked").each(function () {
+                l.push(parseInt($(this).val()));
+
+            });
+            return l;
+        }
+
+        function delete_selected() {
+
+            var r = confirm("Are You Sure? You Want to Delete These Markers?");
+            if (r == true) {
+                console.log("true", get_selected())
+                $.post("/admin/bdel", {
+                        mid: get_selected(),
+                    },
+                    function (data, status) {
+                        if (status == "success") {
+                            alert("Successfully Deleted");
+                            window.location.reload()
+                        } else {
+                            alert("Failed to Deleted! DB Error");
+                        }
+
+                    });
+            } else {
+                console.log("false")
+            }
+        }
+
+        jsontotable();
+    </script>
+    <% } %>
+
+
+</body>
+
+</html>

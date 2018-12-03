@@ -23,6 +23,32 @@ var rad_value = function () {
     return j.length;
 };
 
+var ehr_p_value = function () {
+    var j = JSON.parse(fetchJSON("/api/markers/product/ehr/pnum"));
+    if (!j.patients){
+        return 0;
+    }else{
+    return j.patients;
+    }
+};
+
+var toolkit_p_value = function () {
+    var j = JSON.parse(fetchJSON("/api/markers/product/toolkit/pnum"));
+    if (!j.patients){
+        return 0;
+    }else{
+    return j.patients;
+    }
+};
+var rad_p_value = function () {
+    var j = JSON.parse(fetchJSON("/api/markers/product/radiology/pnum"));
+    if (!j.patients){
+        return 0;
+    }else{
+    return j.patients;
+    }
+};
+
 var ctx = document.getElementById('toolchart').getContext('2d');
 var chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -50,3 +76,4 @@ var chart = new Chart(ctx, {
         }
     }
 });
+

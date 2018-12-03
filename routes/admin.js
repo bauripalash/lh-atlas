@@ -82,7 +82,7 @@ routes.get('/', (request, response) => {
 
 routes.post("/makeadmin", (req, res) => {
     let email = req.body.ue;
-    check(email).isEmail();
+    // check(email).isEmail();
 
 
     let errors = validationResult(req).formatWith(errorFormatter);
@@ -154,6 +154,57 @@ routes.post("/del", check('mid').isNumeric().withMessage("Marker Id is not valid
                 isadmin: request.session.issuper,
                 errormsg: "",
             });
+        });
+
+
+});
+
+routes.post("/bdel", (request, response) => {
+    let data = request.body;
+    let id = data.mid;
+    console.log(id);
+
+
+
+    // let errors = validationResult(request).formatWith(errorFormatter);
+    // if (!errors.isEmpty()) {
+    //     response.render("admin", {
+    //         infomsg: JSON.stringify(errors.array()),
+    //         user: request.session.userid,
+    //         errormsg: "",
+    //         isadmin: request.session.issuper
+    //     })
+    //     return;
+    // }
+
+    Marker.destroy({
+            where: {
+                id: id
+            }
+        })
+        .then(marker => {
+            response.json({msg : "success"})
+        }).catch((err) => {
+            response.json({msg : "fail"})
+        });
+
+
+});
+
+routes.post("/budel", (request, response) => {
+    let data = request.body;
+    let email = data.email;
+    console.log(email);
+
+    User.destroy({
+            where: {
+                email: email
+            }
+        })
+        .then(marker => {
+            response.json({msg : "success"})
+        }).catch((err) => {
+            response.json({msg : "fail"})
         });
 
 
@@ -343,6 +394,48 @@ routes.get("/editmarker/:id" , (request , response) =>{
     // }
 
     
+});
+
+routes.get("/managemarkers" , (request , response)=>{
+    let user = request.session.userid;
+    let issuper = request.session.issuper;
+
+    if (!user){
+        response.render("admin", {
+            infomsg: "Please Login",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    }else{
+        response.render("manmarker", {
+            infomsg: "",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    }
+});
+
+routes.get("/manageusers" , (request , response)=>{
+    let user = request.session.userid;
+    let issuper = request.session.issuper;
+
+    if (!user){
+        response.render("admin", {
+            infomsg: "Please Login",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    }else{
+        response.render("manuser", {
+            infomsg: "",
+            user: user,
+            errormsg: "",
+            isadmin: request.session.issuper
+        })
+    }
 });
 
 routes.post("/editmarker", [
