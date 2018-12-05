@@ -560,6 +560,13 @@ routes.post("/register", (request, response) => {
                         })
 
                     });
+                }else{
+                  response.render("reg",{
+                    errormsg : "Passwords Don't Match!",
+                    infomsg : "",
+                    user : request.session.user,
+                    isadmin : request.session.isadmin,
+                  });
                 }
 
 

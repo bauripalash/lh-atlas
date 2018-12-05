@@ -105,6 +105,7 @@
                             <%= errormsg %>
                         </p>
                         <% } %>
+                      <p style="color : red;" id="emsg" class="text-center"></p>
                         <form action="/admin/register" method="POST" class="form-signin">
                             <input type="text" class="form-control mb-2" placeholder="Email" name="n_email" required
                                 autofocus>
@@ -112,7 +113,7 @@
                                 required>
                             <input type="password" id="pass2" class="form-control mb-2" placeholder="Password" name="n_pass2"
                                 required>
-                            <button class="btn btn-lg btn-primary btn-block mb-1" type="submit">Create Account</button>
+                            <button id="sbtn" class="btn btn-lg btn-primary btn-block mb-1" type="submit">Create Account</button>
                             <p> Already Have a Account? <a href="/admin">Login Here</a> </p>
                         </form>
                     </div>
@@ -141,6 +142,15 @@
         console.log(
             "Are You A Developer? If Not Don't Do Anything Silly Here Please! If Somebody Told You to type some codes here , JUST DON'T DO IT! "
         )
+      $('#pass1, #pass2').on('keyup', function () {
+       if ($('#pass1').val() != $('#pass2').val()) {
+    $('#emsg').html('Passwords Not Matching 😓');
+         $('#sbtn').prop('disabled', true)
+       }else{
+         $('#emsg').html('Matched! 😄').css('color', 'green');
+         $('#sbtn').prop('disabled', false)
+       }
+});
     </script>
 
 </body>
