@@ -237,6 +237,7 @@ routes.post("/addmarker", [
     let website = data.m_website.trim();
     let phone = data.m_contactPhone.trim();
     let created_by = request.session.userid;
+    let isindex = data.isindex;
     console.log(created_by);
 
     let errors = validationResult(request).formatWith(errorFormatter);
@@ -269,12 +270,18 @@ routes.post("/addmarker", [
         creator: created_by,
 
     }).then(marker => {
+      if (isindex == "yes"){
+        let string = encodeURIComponent('Successfully Saved Marker');
+        response.redirect('/?infomsg=' + string);
+      }else{
         response.render("admin", {
             user: created_by,
             errormsg: "",
             isadmin: request.session.issuper,
             infomsg: "Successfully Saved Marker"
-        })
+          })
+        
+        }
         // response.json({msg : "success"})
     }).catch((err) => {
         // response.json({msg : "fail"})
