@@ -71,6 +71,11 @@
             </div>
         </div>
     </nav>
+      <% if (infomsg){ %>
+        <p id="infomsg" style="color: steelblue ; z-index : 10;" class="text-center">
+        <%- infomsg %>
+        </p>
+        <% } %>
 
     <div class="modal fade" id="helpmodal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
@@ -119,6 +124,7 @@
                 <div class="modal-body">
                     <!-- <input type="text" placeholder="Type" id="m_type"><br> -->
                     <form action="/admin/addmarker" method="POST">
+                      <input value="yes" name="isindex" id="isindex" type="hidden">
                         <select required class="form-control" required name="m_tool" id="m_type">
                             <option value="ehr">LibreHealth EHR</option>
                             <option value="toolkit">LibreHealth Toolkit</option>
@@ -434,6 +440,22 @@
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
         crossorigin=""></script>
     <script src="static/js/main.js"></script>
+    <script>
+    // $(function() {
+    // // setTimeout() function will be fired after page is loaded
+    // // it will wait for 5 sec. and then will fire
+    // // $("#successMessage").hide() function
+    // setTimeout(function() {
+    //     $("#infomsg").hide('blind', {}, 500)
+    // }, 5000);
+    // });
+    function hh(){
+    setTimeout(function() {
+    $('#infomsg').fadeOut('fast');
+    }, 3000);
+    }
+    hh();
+    </script>
     <!-- <% if (user){ %>
     <script>
         document.getElementById("login-btn").style.display = "none";

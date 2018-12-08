@@ -49,7 +49,12 @@ app.use(cookieParser())
 app.use("/admin", admin_route);
 app.use("/api", api_route);
 
-
+function magic(input) {
+    input = input.replace(/&/g, '&amp;');
+    input = input.replace(/</g, '&lt;');
+    input = input.replace(/>/g, '&gt;');
+    return input;
+}
 
 
 app.get('/', (request, response) => {
@@ -57,9 +62,16 @@ app.get('/', (request, response) => {
     let sess = request.session;
     // console.log("session userid : " + sess.userid);
     let user = sess.userid;
+    let msg = "";
+    if (request.query.infomsg){
+      msg = magic(request.query.infomsg);
+      }else{
+      msg = "";
+    }
 
     response.render("index", {
-        user: user
+        user: user,
+      infomsg : msg,
     });
 });
 app.get('/signout', (request, response) => {
